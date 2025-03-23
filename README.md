@@ -1,4 +1,4 @@
-This is the desktop version of CellNinja, we send the cfg to the phone's diag module by means of serial communication and receive the diag messages from the modem.
+This is the desktop version of CellNinjia, we send the cfg to the phone's diag module by means of serial communication and receive the diag messages from the modem.
 
 ## Build and Install
 Prerequirement package: 
@@ -9,7 +9,7 @@ Compile the code:
 ```
 make
 ```
-The executable file `CellNinja_desktop` will generate.
+The executable file `CellNinjia_desktop` will generate. The `libcellninjia_asn1.so` is the library which is used to decode the messages.
 
 ## Configure the phone connection to the desktop
 1. Enable the diagnostic mode on the phone. Note that this procedure is phone-specific. For samsung, you don't need to root it, just dial `*#0808#` to open `RNDIS+DM+MODEM+ADB` mode.
@@ -35,10 +35,11 @@ We have tested on Samsung Galaxy S22 Ultra in both 5G and LTE scenario.
 
 ## Run script on ubuntu desktop
 ```
-./CellNinja /dev/ttyUSB0 9600
+./CellNinjia_desktop /dev/ttyUSB0 9600
 ```
 
 ## Supported Message Type
+We can decode these message types so far, please pay attention to the version of the data you collected, if the version is not same, it may lead to program errors or the messages can not be correctly decoded. We are still working on decoding more message types.  
 |Index|Message Name|Logcode|version|
 |--|--|--|--|
 |1|LTE_RLC_DL_AM_Control_PDU|0xB083|48|

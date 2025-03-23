@@ -8,10 +8,7 @@
 #include <memory>
 #include <vector>
 #include "./asn1_group/host.h"
-// 全局变量声明
-extern FILE* debug_file_decode;
 
-// 函数声明
 int get_item_id(int type_id);
 int get_equip_id(int type_id);
 

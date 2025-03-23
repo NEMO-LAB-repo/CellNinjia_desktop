@@ -1,41 +1,41 @@
-# 编译器和选项
+# Compiler and options
 CXX = g++
 CXXFLAGS = -Wall -std=c++11
 INCLUDES = -I. -Iasn1_group
-LIBS = -L. -lhost -lserial  # 添加-L.在当前目录查找库
+LIBS = -L. -lcellninjia_asn1 -lserial  # Add -L. to search for libraries in current directory
 
-# 目标文件
-TARGET = CellNinja_desktop
+# Target files
+TARGET = CellNinjia_desktop
 OBJS = main.o decode_preprocess.o
 
-# 库文件路径
+# Library path
 LIB_PATH = /usr/local/lib
-HOST_LIB = libhost.so
+ASN1_LIB = libcellninjia_asn1.so
 
-# 默认目标
+# Default target
 all: $(TARGET)
 
-# 编译和链接主程序
+# Compile and link the main program
 $(TARGET): $(OBJS) check_lib
 	$(CXX) -o $@ $(OBJS) $(LIBS)
 
-# 编译C++文件
+# Compile C++ files
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-# 确保库文件已复制到系统路径
+# Ensure library files are copied to system path
 check_lib:
-	@if [ ! -f $(LIB_PATH)/$(HOST_LIB) ]; then \
-		echo "Installing $(HOST_LIB) to $(LIB_PATH)"; \
-		sudo cp $(HOST_LIB) $(LIB_PATH)/; \
+	@if [ ! -f $(LIB_PATH)/$(ASN1_LIB) ]; then \
+		echo "Installing $(ASN1_LIB) to $(LIB_PATH)"; \
+		sudo cp $(ASN1_LIB) $(LIB_PATH)/; \
 		sudo ldconfig; \
 	fi
 
-# 运行程序
+# Run the program
 run: $(TARGET)
 	LD_LIBRARY_PATH=.:$(LD_LIBRARY_PATH) ./$(TARGET)
 
-# 清理中间文件和目标文件
+# Clean intermediate files and target files
 clean:
 	rm -f $(TARGET) $(OBJS)
 
