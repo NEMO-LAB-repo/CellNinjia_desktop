@@ -1,4 +1,4 @@
-This is the desktop version of CellNinjia, we send the cfg to the phone's diag module by means of serial communication and receive the diag messages from the modem.
+This is the desktop version of CellNinjia, we send the cfg to the phone's diag module by serial communication and receive the diag messages from the modem.
 
 ## Build and Install
 Prerequirement package: 
@@ -9,12 +9,13 @@ Compile the code:
 ```
 make
 ```
-The executable file `CellNinjia_desktop` will generate. The `libcellninjia_asn1.so` is the library which is used to decode the messages.
+The executable file `CellNinjia_desktop` will generate.   
+The `libcellninjia_asn1.so` is the library which is used to decode the messages.
 
 ## Configure the phone connection to the desktop
 1. Enable the diagnostic mode on the phone. Note that this procedure is phone-specific. For samsung, you don't need to root it, just dial `*#0808#` to open `RNDIS+DM+MODEM+ADB` mode.
-2. Connect the phone to the desktop machine with the USB cable. For some phones, you may need othe USB drivers should be installed.
-3. Figure out the COM port for the phone’s diagnostic mode, which would be used for monitoring the network.
+2. Connect the phone to the desktop machine with the USB cable. You may need to install USB drivers.
+3. Figure out the COM port for the phone’s diagnostic mode.
 For example:
 ```
 ➜ lsusb
@@ -27,11 +28,11 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 ```
 Then load the usbserial:
 ```
-modprobe usbserial vendor=0x18d1 product=0x4ee7
+modprobe usbserial vendor=0x04e8 product=0x6864
 ```
 Typically the serial port would be listed, typically as /dev/ttyUSBX (X=0,1,2,…).  
 
-We have tested on Samsung Galaxy S22 Ultra in both 5G and LTE scenario.
+We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scenarios.
 
 ## Run script on ubuntu desktop
 ```
