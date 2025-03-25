@@ -12,7 +12,7 @@ constexpr int ESCAPE_XOR = 0x20;
 typedef unsigned short     UINT16;
 typedef unsigned char      UINT8;
 
-static std::string buffer_all;
+static std::string current_buffer;
 
 int get_item_id(int type_id) 
 {
@@ -76,46 +76,53 @@ static UINT16 calc_crc (UINT8 *data, size_t len, UINT16 crc)
 
 std::string encode_hdlc_frame (const char *payld, int length) 
 {
-    std::string retstr;
+    std::string result;
     UINT16 crc16 = calc_crc((UINT8 *)payld, length, 0);
     for (int i = 0; i < length + 2; i++) {
         char c;
         if (i < length)
+        {
             c = payld[i];
-        else if (i == length)   // little endian
+        }
+        else if (i == length)   
+        {
             c = crc16 & 0x00FF;
+        }
         else
+        {
             c = (crc16 & 0xFF00) >> 8;
+        }
 
         if (c == '\x7d' || c == '\x7e') {
-            retstr.append(1, '\x7d');
-            retstr.append(1, c ^ ESCAPE_XOR);   // 0x7d: 0x7d5d, 0x7e: 0x7e5e
+            result.append(1, '\x7d');
+            result.append(1, c ^ ESCAPE_XOR); 
         } else
-            retstr.append(1, c);
+            result.append(1, c);
     }
-    retstr.append(1, '\x7e');
-    return retstr;
+    result.append(1, '\x7e');
+    return result;
 }
 
-bool send_msg_to_serial(int serial_fd, const char* mask_msg, int length) 
+bool send_msg_to_serial(int serial_fd, const char* msg, int length) 
 {
-    std::string frame = encode_hdlc_frame(mask_msg, length);
+    std::string Config = encode_hdlc_frame(msg, length);
 
-    FILE* log_file = fopen("sent_cfg.log", "a+");
-    if (log_file) {
-        fprintf(log_file, "--- Frame (size: %zu bytes) ---\n", frame.size());
-        fprintf(log_file, "HEX: ");
-        for (size_t i = 0; i < frame.size(); ++i) {
-            fprintf(log_file, "%02X ", (unsigned char)frame[i]);
+    /*Debug log cfg*/
+    // FILE* log_file = fopen("sent_cfg.log", "a+");
+    // if (log_file) {
+    //     fprintf(log_file, "--- Frame (size: %zu bytes) ---\n", frame.size());
+    //     fprintf(log_file, "HEX: ");
+    //     for (size_t i = 0; i < frame.size(); ++i) {
+    //         fprintf(log_file, "%02X ", (unsigned char)frame[i]);
             
-            if ((i + 1) % 16 == 0 && i < frame.size() - 1) {
-                fprintf(log_file, "\n     ");
-            }
-        }
-        fprintf(log_file, "\n\n");
-        fclose(log_file);
-    }
-    ssize_t bytes_written = write(serial_fd, frame.c_str(), frame.size());
+    //         if ((i + 1) % 16 == 0 && i < frame.size() - 1) {
+    //             fprintf(log_file, "\n     ");
+    //         }
+    //     }
+    //     fprintf(log_file, "\n\n");
+    //     fclose(log_file);
+    // }
+    ssize_t bytes_written = write(serial_fd, Config.c_str(), Config.size());
 
     if (bytes_written < 0) {
         std::cerr << "Error writing to serial port: " << strerror(errno) << std::endl;
@@ -125,7 +132,7 @@ bool send_msg_to_serial(int serial_fd, const char* mask_msg, int length)
     return true;
 }
 
-// Only need to setmask in USB mode
+// Only need to setmask in config for USB mode
 bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
 {
     // output file
@@ -135,7 +142,7 @@ bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
     //     return false;
     // }
 
-    // disable part
+    /*Disable part*/ 
     int buf_disable_size = sizeof(char) * 4 + sizeof(int);
     char* buf_disable = new char[buf_disable_size];
     buf_disable[0] = 115;
@@ -145,7 +152,7 @@ bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
     *((int *)(buf_disable + 4)) = (int) 0;
     
     bool send_flag_disable = send_msg_to_serial(serial_fd, buf_disable, buf_disable_size);
-    std::cout << "Sent disable msg\n" << std::endl;
+    std::cout << "Sent disable config\n" << std::endl;
 
     //set_mask
     int equip_id = -1;
@@ -183,7 +190,6 @@ bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
             break;
         case 0x0000000b:    // LTE, 5G ......
             highest = 0x00000FFF;
-            //highest = 0x000001C4;
             break;
         default:
             break;
@@ -211,53 +217,51 @@ bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
     // cfg_file.close();
     
     bool send_flag = send_msg_to_serial(serial_fd, buf, buf_size);
+    std::cout << "Sent Set_mask config\n" << std::endl;
     
     delete[] buf;
     delete[] buf_disable;
 
-    return send_flag_disable;
+    return send_flag;
 }
-
-
-
 
 void enter_binary(std::vector<uint8_t>& data)
 {
-    // append new log file to global string buffer_all
-    buffer_all.append(reinterpret_cast<const char*>(data.data()), data.size());
+    // append new log file to global string current_buffer
+    current_buffer.append(reinterpret_cast<const char*>(data.data()), data.size());
     
     // output the binary as for now
-    // std::ofstream outfile("buffer_all.txt", std::ios::app);
+    // std::ofstream outfile("current_buffer.txt", std::ios::app);
     // if (outfile.is_open()) 
     // {
-    //     for (size_t i = 0; i < buffer_all.size(); ++i) {
+    //     for (size_t i = 0; i < current_buffer.size(); ++i) {
     //         outfile << std::hex << std::uppercase << std::setw(2) 
-    //                 << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(buffer_all[i])) << " ";
+    //                 << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(current_buffer[i])) << " ";
             
     //         if ((i + 1) % 64 == 0) {
     //             outfile << std::endl;
     //         }
     //     }
         
-    //     if (buffer_all.size() % 64 != 0) {
+    //     if (current_buffer.size() % 64 != 0) {
     //         outfile << std::endl;
     //     }
         
     //     outfile.close();
-    //     std::cout << "Write (" << buffer_all.size() << " bytes to buffer_all.txt)" << std::endl;
+    //     std::cout << "Write (" << current_buffer.size() << " bytes to current_buffer.txt)" << std::endl;
     // }
 }
 
 static void unescape (std::string& frame) 
 {
-    bool esc = false;
+    bool is_esc = false;
     std::string output;
     for (size_t i = 0; i < frame.size(); i++) {
-        if (esc) {
+        if (is_esc) {
             output.append(1, char(frame[i] ^ ESCAPE_XOR));
-            esc = false;
+            is_esc = false;
         } else if (frame[i] == '\x7d') {
-            esc = true;
+            is_esc = true;
         } else {
             output.append(1, frame[i]);
         }
@@ -268,12 +272,12 @@ static void unescape (std::string& frame)
 
 bool get_next_frame(std::string& output_frame, bool& crc_correct) 
 {
-    size_t delim = buffer_all.find('\x7e');
+    size_t delim = current_buffer.find('\x7e');
     if (delim == std::string::npos)
         return false;
     
-    output_frame = buffer_all.substr(0, delim);
-    buffer_all.erase(0, delim + 1);
+    output_frame = current_buffer.substr(0, delim);
+    current_buffer.erase(0, delim + 1);
     unescape(output_frame);
     
     // output the frame
@@ -308,14 +312,15 @@ bool get_next_frame(std::string& output_frame, bool& crc_correct)
     //     return true;
     // }
     
-    // little endian
+    // data crc
     UINT16 b1 = output_frame[output_frame.size() - 1] & 0xFF;
     UINT16 b2 = output_frame[output_frame.size() - 2] & 0xFF;
     UINT16 frame_crc16 = (b1 << 8) + b2;
     
     // keep the original crc
-    UINT16 original_crc16 = frame_crc16;
+    // UINT16 original_crc16 = frame_crc16;
     
+    //compute crc
     output_frame.erase(output_frame.size() - 2);
     UINT16 crc16 = calc_crc((UINT8 *) output_frame.c_str(), output_frame.size(), 0);
     crc_correct = (frame_crc16 == crc16);
@@ -398,7 +403,7 @@ std::string compute_timestamp(uint64_t timestamp)
 }
 
 
-//decode each msg header
+//decode each msg header msg_len, logcode, timestamp and version
 void decode_header(const char *output_frame, int start_index, uint64_t *msg_header)
 {
     int log_msg_len_start_index = start_index;
@@ -427,13 +432,15 @@ void decode_header(const char *output_frame, int start_index, uint64_t *msg_head
     uint64_t t_8 = (uint64_t)(output_frame[timestamp_start_index+7] & 0xFF);
 
     uint64_t timestamp = ((t_8<<56)|(t_7<<48)|(t_6<<40)|(t_5<<32)|(t_4<<24)|(t_3<<16)|(t_2<<8)|t_1);
-    int version = (output_frame[timestamp_start_index+8] & 0xFF);
+
+    // This version may not be true
+    int version_start_index = start_index+12;
+    int version = (output_frame[version_start_index] & 0xFF);
 
     msg_header[0]=msg_len;
     msg_header[1]=logcode;
     msg_header[2]=timestamp;
     msg_header[3]=version;
-    msg_header[4]= 0;
 }               
 
 
@@ -460,7 +467,7 @@ void decode()
                 const char *frame_c = frame.c_str();
 
                 int start_index=4;
-                uint64_t msg_header[5];
+                uint64_t msg_header[4];
                 decode_header(frame_c, start_index, msg_header);
                 std::string timestamp_str = compute_timestamp(msg_header[2]);
                 start_index+=12;

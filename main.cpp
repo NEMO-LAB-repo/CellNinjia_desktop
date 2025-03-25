@@ -56,9 +56,8 @@ int main(int argc, char *argv[])
 
         std::cout << "success open" << port << std::endl;
 
-        // personalized your logcode here
-        int logcode_num = 2;
-        uint16_t logcode_list[2] = {0xB083, 0xB197};
+        int logcode_num = 1;
+        uint16_t logcode_list[1] = {0xB083};
 
         // generate and send cfg
         bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), logcode_list, logcode_num);
