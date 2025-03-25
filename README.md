@@ -40,8 +40,8 @@ We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scena
 ```
 
 ## Supported Message Type
-We can decode these message types so far, please pay attention to the version of the data you collected, if the version is not same, it may lead to program errors or the messages can not be correctly decoded. We are still working on decoding more message types.  
-|Index|Message Name|Logcode|version|
+We can decode these message types so far, please pay attention to the version of the data you collected, if the version is not the same, it may lead to program errors or the messages can not be correctly decoded. We are still working on decoding more message types.  
+|Index|Message Name|Logcode|Version|
 |--|--|--|--|
 |1|LTE_RLC_DL_AM_Control_PDU|0xB083|48|
 |2|LTE_PDCP_DL_Data_PDU|0xB0A1|53|
