@@ -36,7 +36,7 @@ We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scena
 
 ## Run script on ubuntu desktop
 ```
-./CellNinjia_desktop /dev/ttyUSB0 9600
+./CellNinjia_desktop /dev/ttyUSB* 9600
 ```
 
 ## Supported Message Type
