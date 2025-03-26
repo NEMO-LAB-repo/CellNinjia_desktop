@@ -8,6 +8,16 @@
 // global serial object define
 std::shared_ptr<LibSerial::SerialPort> g_serial_port;
 
+void display_help(const char* program_name) {
+    std::cout << "Usage: " << program_name << " [-o <outputfile>] -p <portname> -b <baudrate>" << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  -h          Display this help message" << std::endl;
+    std::cout << "  -o <file>   Optional: Redirect output to specified file" << std::endl;
+    std::cout << "  -p <port>   Required: Serial port name (e.g., /dev/ttyUSB0)" << std::endl;
+    std::cout << "  -b <baud>   Required: Baud rate (9600, 19200, 38400, 57600, 115200)" << std::endl;
+}
+
+
 int main(int argc, char *argv[])
 {
     try
@@ -15,35 +25,54 @@ int main(int argc, char *argv[])
         // Default serial port configuration
         std::string port = "/dev/ttyUSB0";
         LibSerial::BaudRate baud_rate = LibSerial::BaudRate::BAUD_9600;
+        std::string output_filename = "";
 
-        if (argc > 1)
-            port = argv[1];
-        if (argc > 2)
+        // Parse command line arguments
+        for (int i = 1; i < argc; i++) 
         {
-            int baud = std::stoi(argv[2]);
-            switch (baud)
-            {
-            case 9600:
-                baud_rate = LibSerial::BaudRate::BAUD_9600;
-                break;
-            case 19200:
-                baud_rate = LibSerial::BaudRate::BAUD_19200;
-                break;
-            case 38400:
-                baud_rate = LibSerial::BaudRate::BAUD_38400;
-                break;
-            case 57600:
-                baud_rate = LibSerial::BaudRate::BAUD_57600;
-                break;
-            case 115200:
-                baud_rate = LibSerial::BaudRate::BAUD_115200;
-                break;
-            default:
-                std::cerr << "unsupported baud rate: " << baud << "we will use the default 9600" << std::endl;
-                baud_rate = LibSerial::BaudRate::BAUD_9600;
+            std::string arg = argv[i];
+            
+            if (arg == "-o" && i + 1 < argc) {
+                output_filename = argv[i + 1];
+                i++; 
+            } else if (arg == "-p" && i + 1 < argc) {
+                port = argv[i + 1];
+                i++; 
+            } else if (arg == "-b" && i + 1 < argc) {
+                int baud = std::stoi(argv[i + 1]);
+                i++; 
+                
+                switch (baud) {
+                    case 9600:
+                        baud_rate = LibSerial::BaudRate::BAUD_9600;
+                        break;
+                    case 19200:
+                        baud_rate = LibSerial::BaudRate::BAUD_19200;
+                        break;
+                    case 38400:
+                        baud_rate = LibSerial::BaudRate::BAUD_38400;
+                        break;
+                    case 57600:
+                        baud_rate = LibSerial::BaudRate::BAUD_57600;
+                        break;
+                    case 115200:
+                        baud_rate = LibSerial::BaudRate::BAUD_115200;
+                        break;
+                    default:
+                        std::cerr << "Unsupported baud rate: " << baud << ", using default 9600" << std::endl;
+                        baud_rate = LibSerial::BaudRate::BAUD_9600;
+                }
+            } else if (arg == "-h" || arg == "--help") {
+                display_help(argv[0]);
+                return 0;
+            }else{
+                std::cout << "Error arguments." << std::endl;
+                std::cout << "Usage: " << argv[0] << " -o <outputfile> -p <portname> -b <baudrate>" << std::endl;
+                return 0;
             }
         }
 
+       
         g_serial_port = std::make_shared<LibSerial::SerialPort>();
 
         // open and config
@@ -61,7 +90,20 @@ int main(int argc, char *argv[])
 
         // generate and send cfg
         bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), logcode_list, logcode_num);
-        // std::ofstream output_file("serial_data.txt");
+
+        // Redirect stdout if output file is specified
+        FILE* original_stdout = stdout;
+        FILE* output_file = nullptr;
+
+        if (!output_filename.empty()) {
+            output_file = freopen(output_filename.c_str(), "w", stdout);
+            if (!output_file) {
+                std::cerr << "Error: Could not open output file: " << output_filename << std::endl;
+                return 1;
+            }
+            // std::cout << "Output redirected to: " << output_filename << std::endl;
+        }
+
         while (true)
         {
             std::vector<uint8_t> buffer;
@@ -71,15 +113,14 @@ int main(int argc, char *argv[])
 
             if (buffer.size() > 0)
             {
-                std::cout << "Received " << buffer.size() << " bytes of data" << std::endl;
+                // std::cout << "Received " << buffer.size() << " bytes of data" << std::endl;
 
-                // Output the raw hex data to serial_data.txt
+                // Output the raw hex data 
                 // for (int i = 0; i < buffer.size(); i++)
                 // {
-                //     output_file << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]) << " ";
+                //     std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]) << " ";
                 // }
-                // output_file << std::endl;
-                // output_file.flush(); 
+                // std::cout << std::endl;
 
                 // There is something different between the USB mode and the memory mode, there would be some message leave head in the previous log and leave tail in the current log
                 // So we need to use a string to append and delete it easily
@@ -93,6 +134,12 @@ int main(int argc, char *argv[])
         {
             g_serial_port->Close();
             std::cout << "close port" << std::endl;
+        }
+        
+        // Restore stdout if it was redirected
+        if (output_file) {
+            fclose(stdout);
+            stdout = original_stdout;
         }
     }
     catch (const LibSerial::OpenFailed &e)

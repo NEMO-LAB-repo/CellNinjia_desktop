@@ -281,7 +281,7 @@ bool get_next_frame(std::string& output_frame, bool& crc_correct)
     unescape(output_frame);
     
     // output the frame
-    std::ofstream outfile("frame_output.txt", std::ios::app);
+    // std::ofstream outfile("frame_output.txt", std::ios::app);
     // if (outfile.is_open()) {
     //     outfile << "--- New Frame ---" << std::endl;
     //     outfile << "Raw frame size: " << output_frame.size() << " bytes" << std::endl;
@@ -324,23 +324,27 @@ bool get_next_frame(std::string& output_frame, bool& crc_correct)
     output_frame.erase(output_frame.size() - 2);
     UINT16 crc16 = calc_crc((UINT8 *) output_frame.c_str(), output_frame.size(), 0);
     crc_correct = (frame_crc16 == crc16);
-    
-    // if crc fail, output it 
-    if (outfile.is_open()) {
-        // outfile << "Frame CRC: 0x" << std::hex << std::uppercase << std::setw(4) 
-        //         << std::setfill('0') << original_crc16 << std::endl;
-        // outfile << "Calc CRC: 0x" << std::hex << std::uppercase << std::setw(4) 
-        //         << std::setfill('0') << crc16 << std::endl;
-        
-        if (crc_correct == false) {
-            outfile << "CRC FALSE - Checksum mismatch" << std::endl;
-        } else {
-            // outfile << "CRC CORRECT" << std::endl;
-        }
-        
-        // outfile << "----------------------------------------" << std::endl;
-        outfile.close();
+
+    if (crc_correct == false) {
+        std::cout << "CRC FALSE - Checksum mismatch" << std::endl;
     }
+    
+    // // if crc fail, output it 
+    // if (outfile.is_open()) {
+    //     // outfile << "Frame CRC: 0x" << std::hex << std::uppercase << std::setw(4) 
+    //     //         << std::setfill('0') << original_crc16 << std::endl;
+    //     // outfile << "Calc CRC: 0x" << std::hex << std::uppercase << std::setw(4) 
+    //     //         << std::setfill('0') << crc16 << std::endl;
+        
+    //     if (crc_correct == false) {
+    //         outfile << "CRC FALSE - Checksum mismatch" << std::endl;
+    //     } else {
+    //         // outfile << "CRC CORRECT" << std::endl;
+    //     }
+        
+    //     // outfile << "----------------------------------------" << std::endl;
+    //     outfile.close();
+    // }
     
     return true;
 }
@@ -472,20 +476,16 @@ void decode()
                 std::string timestamp_str = compute_timestamp(msg_header[2]);
                 start_index+=12;
                 
-                std::ofstream outfile1("decode_result.txt", std::ios::app);
-                if (outfile1.is_open()) {
-                    outfile1 << "This Msg is " << std::hex << std::uppercase << std::setw(2) 
-                            << std::setfill('0') << static_cast<int>(msg_header[1]) 
-                            << ": Msg_len = " << std::dec << static_cast<int>(msg_header[0]) 
-                            << ", logcode = " << std::hex << std::uppercase << std::setw(2) 
-                            << std::setfill('0') << static_cast<int>(msg_header[1]) 
-                            << ", version = " << std::dec << static_cast<int>(msg_header[3]) 
-                            << ", timestamp = " << timestamp_str
-                            << std::endl;
-                    
-                    outfile1 << "----------------------------------" << std::endl;
-                    outfile1.close();
-                }
+                std::cout << "This Msg is " << std::hex << std::uppercase << std::setw(2) 
+                << std::setfill('0') << static_cast<int>(msg_header[1]) 
+                << ": Msg_len = " << std::dec << static_cast<int>(msg_header[0]) 
+                << ", logcode = " << std::hex << std::uppercase << std::setw(2) 
+                << std::setfill('0') << static_cast<int>(msg_header[1]) 
+                << ", version = " << std::dec << static_cast<int>(msg_header[3]) 
+                << ", timestamp = " << timestamp_str
+                << std::endl;
+                
+                std::cout << "----------------------------------" << std::endl;
 
                 //decode_libarary
                 uint16_t logcode_now = (uint16_t) msg_header[1];
@@ -495,11 +495,11 @@ void decode()
                 int usecond = (int)((time_real/PER_USECOND)-(second*1.0e6));
                 uint64_t time_in_us_total = (uint64_t)second * 1000000 + (uint64_t)usecond;
                 
-                FILE* orig_stdout = stdout;
-                stdout = fopen("decode_result.txt", "a");
+                // FILE* orig_stdout = stdout;
+                // stdout = fopen("decode_result.txt", "a");
                 int a = S_D_V_decode((uint8_t *)frame_c, 65535, logcode_now, &start_index, time_in_us_total, 1, 1, 1, msg_len);
-                fclose(stdout);
-                stdout = orig_stdout;
+                // fclose(stdout);
+                // stdout = orig_stdout;
 
             }
             else

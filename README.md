@@ -34,9 +34,9 @@ Typically the serial port would be listed, typically as /dev/ttyUSBX (X=0,1,2,â€
 
 We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scenarios.
 
-## Run script on ubuntu desktop
+## How to run on ubuntu desktop
 ```
-./CellNinjia_desktop /dev/ttyUSB* 9600
+./CellNinjia_desktop -p <portname> -b <baudrate> -o <outputfile> (optional)
 ```
 
 ## Supported Message Type
