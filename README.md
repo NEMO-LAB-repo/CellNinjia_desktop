@@ -12,10 +12,10 @@ cd build
 cmake ..
 make
 ```
-The executable file `CellNinjia_desktop` and `decoder` will generate.   
+The executable file `CellNinjia_desktop` and `decoder` will be generated.   
 The `libcellninjia_asn1.so` is the library which is used to decode the messages.
 
-## Configure the phone connection to the desktop
+## Configure the phone connection to the desktop steps
 1. Enable the diagnostic mode on the phone. Note that this procedure is phone-specific. For samsung, you don't need to root it, just dial `*#0808#` to open `RNDIS+DM+MODEM+ADB` mode.
 2. Connect the phone to the desktop machine with the USB cable. You may need to install USB drivers.
 3. Figure out the COM port for the phoneâ€™s diagnostic mode.
@@ -38,19 +38,22 @@ Typically the serial port would be listed, typically as /dev/ttyUSBX (X=0,1,2,â€
 We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scenarios.
 
 ## Run Offline
-We collect raw binary data transferd by port and record in specific file.
+We collect raw binary data transferred by port and record in specific file.
 ```
 ./CellNinjia_desktop -p <portname> -b <baudrate> -s off <filename>
+example: ./CellNinjia_desktop -p /dev/ttyUSB0 -b 9600 -s off raw_binary.log
 ```
 Then offline decode the raw binary data.
 ```
 ./decoder -i <binary data filename> -o <decode result filename>
+example: ./decoder -i raw_binary.log -o decode_result.txt
 ```
 
 ## Run Online
 We decode the message data and record in specific file.
 ```
 ./CellNinjia_desktop -p <portname> -b <baudrate> -s on <filename>
+./CellNinjia_desktop -p /dev/ttyUSB0 -b 9600 -s on online_decode.txt
 ```
 
 ## Supported Message Type
