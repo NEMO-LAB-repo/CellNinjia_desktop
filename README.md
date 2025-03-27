@@ -34,9 +34,20 @@ Typically the serial port would be listed, typically as /dev/ttyUSBX (X=0,1,2,â€
 
 We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scenarios.
 
-## How to run on ubuntu desktop
+## Run Offline
+We collect raw binary data transferd by port and record in specific file.
 ```
-./CellNinjia_desktop -p <portname> -b <baudrate> -o <outputfile> (optional)
+./CellNinjia_desktop -p <portname> -b <baudrate> -s off <filename>
+```
+Then offline decode the raw binary data.
+```
+./decoder -i <binary data file name> -o <decode result file name>
+```
+
+## Run Online
+We decode the message data and record in specific file.
+```
+./CellNinjia_desktop -p <portname> -b <baudrate> -s on <filename>
 ```
 
 ## Supported Message Type

@@ -9,14 +9,20 @@
 std::shared_ptr<LibSerial::SerialPort> g_serial_port;
 
 void display_help(const char* program_name) {
-    std::cout << "Usage: " << program_name << " [-o <outputfile>] -p <portname> -b <baudrate>" << std::endl;
+    std::cout << "Usage: " << program_name << " -p <portname> -b <baudrate> -s <mode> <logfile>" << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << "  -h          Display this help message" << std::endl;
-    std::cout << "  -o <file>   Optional: Redirect output to specified file" << std::endl;
-    std::cout << "  -p <port>   Required: Serial port name (e.g., /dev/ttyUSB0)" << std::endl;
-    std::cout << "  -b <baud>   Required: Baud rate (9600, 19200, 38400, 57600, 115200)" << std::endl;
+    std::cout << "  -p <port>   Serial port name (e.g., /dev/ttyUSB0)" << std::endl;
+    std::cout << "  -b <baud>   Baud rate (9600, 19200, 38400, 57600, 115200)" << std::endl;
+    std::cout << "  -s <mode> <file>  Mode and output file:" << std::endl;
+    std::cout << "       off  <file>: Offline mode - save raw binary data to file" << std::endl;
+    std::cout << "       on   <file>: Online mode - save decoded output to file but not save raw binary data" << std::endl;
 }
 
+enum class RunMode {
+    OFFLINE,   // Save raw binary data to file
+    ONLINE     // Save decoded output to file
+};
 
 int main(int argc, char *argv[])
 {
@@ -26,16 +32,14 @@ int main(int argc, char *argv[])
         std::string port = "/dev/ttyUSB0";
         LibSerial::BaudRate baud_rate = LibSerial::BaudRate::BAUD_9600;
         std::string output_filename = "";
+        RunMode run_mode = RunMode::ONLINE;
 
         // Parse command line arguments
         for (int i = 1; i < argc; i++) 
         {
             std::string arg = argv[i];
             
-            if (arg == "-o" && i + 1 < argc) {
-                output_filename = argv[i + 1];
-                i++; 
-            } else if (arg == "-p" && i + 1 < argc) {
+            if (arg == "-p" && i + 1 < argc) {
                 port = argv[i + 1];
                 i++; 
             } else if (arg == "-b" && i + 1 < argc) {
@@ -62,17 +66,31 @@ int main(int argc, char *argv[])
                         std::cerr << "Unsupported baud rate: " << baud << ", using default 9600" << std::endl;
                         baud_rate = LibSerial::BaudRate::BAUD_9600;
                 }
+            } else if (arg == "-s" && i + 2 < argc) {
+                std::string mode = argv[i + 1];
+                output_filename = argv[i + 2];
+                
+                if (mode == "off") {
+                    run_mode = RunMode::OFFLINE;
+                } else if (mode == "on") {
+                    run_mode = RunMode::ONLINE;
+                } else {
+                    std::cerr << "Invalid mode: " << mode << ", expected 'on' or 'off'" << std::endl;
+                    display_help(argv[0]);
+                    return 1;
+                }
+                
+                i += 2; // Skip the next two arguments
             } else if (arg == "-h" || arg == "--help") {
                 display_help(argv[0]);
                 return 0;
-            }else{
+            } else {
                 std::cout << "Error arguments." << std::endl;
-                std::cout << "Usage: " << argv[0] << " -o <outputfile> -p <portname> -b <baudrate>" << std::endl;
-                return 0;
+                display_help(argv[0]);
+                return 1;
             }
         }
 
-       
         g_serial_port = std::make_shared<LibSerial::SerialPort>();
 
         // open and config
@@ -83,7 +101,7 @@ int main(int argc, char *argv[])
         g_serial_port->SetParity(LibSerial::Parity::PARITY_NONE);
         g_serial_port->SetStopBits(LibSerial::StopBits::STOP_BITS_1);
 
-        std::cout << "success open" << port << std::endl;
+        std::cout << "Success open " << port << std::endl;
 
         int logcode_num = 1;
         uint16_t logcode_list[1] = {0xB083};
@@ -91,17 +109,26 @@ int main(int argc, char *argv[])
         // generate and send cfg
         bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), logcode_list, logcode_num);
 
-        // Redirect stdout if output file is specified
+        // Set up file output based on mode
+        std::ofstream binary_output_file;
         FILE* original_stdout = stdout;
-        FILE* output_file = nullptr;
-
-        if (!output_filename.empty()) {
-            output_file = freopen(output_filename.c_str(), "w", stdout);
-            if (!output_file) {
-                std::cerr << "Error: Could not open output file: " << output_filename << std::endl;
+        
+        if (run_mode == RunMode::OFFLINE) {
+            // Open binary file for raw data in offline mode
+            binary_output_file.open(output_filename, std::ios::binary);
+            if (!binary_output_file.is_open()) {
+                std::cerr << "Error: Could not open binary output file: " << output_filename << std::endl;
                 return 1;
             }
-            // std::cout << "Output redirected to: " << output_filename << std::endl;
+            std::cout << "Binary raw data will be written to: " << output_filename << std::endl;
+        } else if (run_mode == RunMode::ONLINE) {
+            // Redirect stdout to file for decoded data in online mode
+            FILE* output_file = freopen(output_filename.c_str(), "w", stdout);
+            if (!output_file) {
+                std::cerr << "Error: Could not open output file for decoded data: " << output_filename << std::endl;
+                return 1;
+            }
+            std::cerr << "Decoded output will be written to: " << output_filename << std::endl;
         }
 
         while (true)
@@ -113,19 +140,15 @@ int main(int argc, char *argv[])
 
             if (buffer.size() > 0)
             {
-                // std::cout << "Received " << buffer.size() << " bytes of data" << std::endl;
-
-                // Output the raw hex data 
-                // for (int i = 0; i < buffer.size(); i++)
-                // {
-                //     std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i]) << " ";
-                // }
-                // std::cout << std::endl;
-
-                // There is something different between the USB mode and the memory mode, there would be some message leave head in the previous log and leave tail in the current log
-                // So we need to use a string to append and delete it easily
-                enter_binary(buffer);
-                decode();
+                if (run_mode == RunMode::OFFLINE) {
+                    // Write raw data directly to binary file
+                    binary_output_file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+                    binary_output_file.flush();
+                } else {
+                    // Process data for default and online mode
+                    enter_binary(buffer);
+                    decode();
+                }
             }
         }
 
@@ -136,8 +159,10 @@ int main(int argc, char *argv[])
             std::cout << "close port" << std::endl;
         }
         
-        // Restore stdout if it was redirected
-        if (output_file) {
+        // Clean up files
+        if (run_mode == RunMode::OFFLINE && binary_output_file.is_open()) {
+            binary_output_file.close();
+        } else if (run_mode == RunMode::ONLINE) {
             fclose(stdout);
             stdout = original_stdout;
         }
