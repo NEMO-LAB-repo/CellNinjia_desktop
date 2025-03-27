@@ -7,9 +7,12 @@ libserial
 ```
 Compile the code:
 ```
+mkdir build
+cd build
+cmake ..
 make
 ```
-The executable file `CellNinjia_desktop` will generate.   
+The executable file `CellNinjia_desktop` and `decoder` will generate.   
 The `libcellninjia_asn1.so` is the library which is used to decode the messages.
 
 ## Configure the phone connection to the desktop
@@ -41,7 +44,7 @@ We collect raw binary data transferd by port and record in specific file.
 ```
 Then offline decode the raw binary data.
 ```
-./decoder -i <binary data file name> -o <decode result file name>
+./decoder -i <binary data filename> -o <decode result filename>
 ```
 
 ## Run Online
