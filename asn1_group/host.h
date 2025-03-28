@@ -44,6 +44,7 @@ void decode_B825(uint8_t *hex_data, size_t length, int *index);
 void decode_B826(uint8_t *hex_data, size_t length, int *index);
 void decode_B840(uint8_t *hex_data, size_t length, int *index);
 void decode_B842(uint8_t *hex_data, size_t length, int *index);
+void decode_B84B(uint8_t *hex_data, size_t length, int *index);
 
 
 

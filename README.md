@@ -91,3 +91,4 @@ We can decode these message types so far, please pay attention to the version of
 |29|NR5G_RRC_Supported_CA_Combos|0xB826|7|
 |30|NR5G_PDCP_DL_Data_Pdu|0xB840|6|
 |31|NR5G_PDCP_DL_Rbs_Stats|0xB842|5|
+|32|NR5G_L2_DL_Config|0xB84B|5|
