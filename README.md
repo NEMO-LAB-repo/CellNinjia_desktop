@@ -99,3 +99,4 @@ We can decode these message types so far, please pay attention to the version of
 |34|NR5G L2 DL DATA PDU|0xB857|6|
 |35|NR5G MAC DCI Info|0xB885|5|
 |36|NR5G MAC PDSCH Status|0xB887|5|
+|37|NR5G MAC UCI Information|0xB89B|2|
