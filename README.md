@@ -100,3 +100,4 @@ We can decode these message types so far, please pay attention to the version of
 |35|NR5G MAC DCI Info|0xB885|5|
 |36|NR5G MAC PDSCH Status|0xB887|5|
 |37|NR5G MAC UCI Information|0xB89B|2|
+|38|NR5G L2 UL TB|0xB872|4|
