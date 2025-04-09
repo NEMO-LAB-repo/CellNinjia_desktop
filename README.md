@@ -97,8 +97,12 @@ We can decode these message types so far, please pay attention to the version of
 |32|NR5G_L2_DL_Config|0xB84B|5|
 |33|NR5G_RLC_DL_Status_PDU|0xB84E|1|
 |34|NR5G L2 DL DATA PDU|0xB857|6|
-|35|NR5G MAC DCI Info|0xB885|5|
-|36|NR5G MAC PDSCH Status|0xB887|5|
-|37|NR5G MAC UCI Information|0xB89B|2|
-|38|NR5G L2 UL TB|0xB872|4|
-|39|NR5G PDCP UL Stats|0xB860|9|
+|35|NR5G PDCP UL Stats|0xB860|9|
+|36|NR5G RLC UL Stats|0xB868|4|
+|37|NR5G L2 UL TB|0xB872|4|
+|38|NR5G MAC DCI Info|0xB885|5|
+|39|NR5G MAC PDSCH Status|0xB887|5|
+|40|NR5G MAC UCI Information|0xB89B|2|
+
+
+
