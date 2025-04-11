@@ -103,6 +103,7 @@ We can decode these message types so far, please pay attention to the version of
 |38|NR5G MAC DCI Info|0xB885|5|
 |39|NR5G MAC PDSCH Status|0xB887|5|
 |40|NR5G MAC UCI Information|0xB89B|2|
+|41|NR5G L2 UL Config|0xB871|5|
 
 
 
