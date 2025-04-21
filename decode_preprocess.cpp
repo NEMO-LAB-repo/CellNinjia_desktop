@@ -439,7 +439,7 @@ void decode_header(const char *output_frame, int start_index, uint64_t *msg_head
 
     // This version may not be true
     int version_start_index = start_index+12;
-    int version = (output_frame[version_start_index] & 0xFF);
+    int version = ((output_frame[version_start_index+3] & 0xFF)<<24) | ((output_frame[version_start_index+2] & 0xFF)<<16) | ((output_frame[version_start_index+1] & 0xFF)<<8) | ((output_frame[version_start_index] & 0xFF));
 
     msg_header[0]=msg_len;
     msg_header[1]=logcode;
@@ -481,7 +481,7 @@ void decode()
                 << ": Msg_len = " << std::dec << static_cast<int>(msg_header[0]) 
                 << ", logcode = " << std::hex << std::uppercase << std::setw(2) 
                 << std::setfill('0') << static_cast<int>(msg_header[1]) 
-                << ", version = " << std::dec << static_cast<int>(msg_header[3]) 
+                << ", version_4B = " << std::dec << static_cast<int>(msg_header[3]) 
                 << ", timestamp = " << timestamp_str
                 << std::endl;
                 

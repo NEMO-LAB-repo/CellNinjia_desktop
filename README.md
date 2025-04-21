@@ -106,6 +106,7 @@ We can decode these message types so far, please pay attention to the version of
 |41|NR5G L2 UL Config|0xB871|5|
 |42|NR5G MAC DL TB Report|0xB886|3|
 |43|NR5G MAC CDRX Events Info|0xB890|131073|
-
+|44|NR5G NAS SM5G Plain OTA Outgoing Msg|0xB801|1|
+|45|NR5G MAC Flow Control|0xB89C|131073|
 
 
