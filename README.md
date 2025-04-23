@@ -86,27 +86,26 @@ We can decode these message types so far, please pay attention to the version of
 |21|LTE_ML1_Serving_Cell_Information|0xB197|2|
 |22|LTE_ML1_Common_DC_Offset|0xB1B2|49|1|
 |23|LTE_ML1_PDSCH_Stat_Indication|0xB173|48|
-|24|NR5G_NAS_Plain_Message_Container|0xB814|1|
-|25|NR5G_NAS_MM5G_NSSAI_Info|0xB815|1|
-|26|NR5G_RRC_MIB_Info|0xB822|1|
-|27|NR5G_RRC_Serving_Cell_Info|0xB823|4|
-|28|NR5G_RRC_Configuration_Info|0xB825|8|
-|29|NR5G_RRC_Supported_CA_Combos|0xB826|7|
-|30|NR5G_PDCP_DL_Data_Pdu|0xB840|6|
-|31|NR5G_PDCP_DL_Rbs_Stats|0xB842|5|
-|32|NR5G_L2_DL_Config|0xB84B|5|
-|33|NR5G_RLC_DL_Status_PDU|0xB84E|1|
-|34|NR5G L2 DL DATA PDU|0xB857|6|
-|35|NR5G PDCP UL Stats|0xB860|9|
-|36|NR5G RLC UL Stats|0xB868|4|
-|37|NR5G L2 UL TB|0xB872|4|
-|38|NR5G MAC DCI Info|0xB885|5|
-|39|NR5G MAC PDSCH Status|0xB887|5|
-|40|NR5G MAC UCI Information|0xB89B|2|
-|41|NR5G L2 UL Config|0xB871|5|
-|42|NR5G MAC DL TB Report|0xB886|3|
+|24|NR5G NAS SM5G Plain OTA Outgoing Msg|0xB801|1|
+|25|NR5G_NAS_Plain_Message_Container|0xB814|1|
+|26|NR5G_NAS_MM5G_NSSAI_Info|0xB815|1|
+|27|NR5G_RRC_MIB_Info|0xB822|1|
+|28|NR5G_RRC_Serving_Cell_Info|0xB823|4|
+|29|NR5G_RRC_Configuration_Info|0xB825|8|
+|30|NR5G_RRC_Supported_CA_Combos|0xB826|7|
+|31|NR5G_PDCP_DL_Data_Pdu|0xB840|6|
+|32|NR5G_PDCP_DL_Rbs_Stats|0xB842|5|
+|33|NR5G_L2_DL_Config|0xB84B|5|
+|34|NR5G_RLC_DL_Status_PDU|0xB84E|1|
+|35|NR5G L2 DL DATA PDU|0xB857|6|
+|36|NR5G PDCP UL Stats|0xB860|9|
+|37|NR5G RLC UL Stats|0xB868|4|
+|38|NR5G L2 UL Config|0xB871|5|
+|39|NR5G L2 UL TB|0xB872|4|
+|40|NR5G MAC DCI Info|0xB885|5|
+|41|NR5G MAC DL TB Report|0xB886|3|
+|42|NR5G MAC PDSCH Status|0xB887|5|
 |43|NR5G MAC CDRX Events Info|0xB890|131073|
-|44|NR5G NAS SM5G Plain OTA Outgoing Msg|0xB801|1|
+|44|NR5G MAC UCI Information|0xB89B|2|
 |45|NR5G MAC Flow Control|0xB89C|131073|
-
-
+|46|NR5G MAC CSF Report|0xB8A7|131073|
