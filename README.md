@@ -109,3 +109,4 @@ We can decode these message types so far, please pay attention to the version of
 |44|NR5G MAC UCI Information|0xB89B|2|
 |45|NR5G MAC Flow Control|0xB89C|131073|
 |46|NR5G MAC CSF Report|0xB8A7|131073|
+|47|NR5G NAS MM5G State|0xB80C|1|
