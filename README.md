@@ -110,3 +110,4 @@ We can decode these message types so far, please pay attention to the version of
 |45|NR5G MAC Flow Control|0xB89C|131073|
 |46|NR5G MAC CSF Report|0xB8A7|131073|
 |47|NR5G NAS MM5G State|0xB80C|1|
+|48|NR5G PDCP UL Control Pdu|0xB861|196609|
