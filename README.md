@@ -115,3 +115,4 @@ We can decode these message types so far, please pay attention to the version of
 |50|NR5G RLC DL Stats|0xB84D|196608|
 |51|NR5G MAC PDSCH Stats|0xB888|196608|
 |52|NR5G MAC RACH Trigger|0xB889|196615|
+|53|NR5G MAC UL TB Stats|0xB881|196609|
