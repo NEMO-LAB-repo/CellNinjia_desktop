@@ -117,3 +117,4 @@ We can decode these message types so far, please pay attention to the version of
 |52|NR5G MAC Flow Control|0xB89C|131073|
 |53|NR5G MAC CSF Report|0xB8A7|131073|
 |54|NR5G ML1 Searcher Measurement Database Update Ext|0xB97F|131081|
+|55|NR5G RRC OTA Packet|0xB821|16.6.0|
