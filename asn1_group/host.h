@@ -68,6 +68,7 @@ void decode_B888(uint8_t *hex_data, size_t length, int *index);
 void decode_B889(uint8_t *hex_data, size_t length, int *index);
 void decode_B97F(uint8_t *hex_data, size_t length, int *index);
 void decode_B821(uint8_t *hex_data, size_t length, int *index);
+void decode_B88A(uint8_t *hex_data, size_t length, int *index);
 
 #ifdef __cplusplus
 }
