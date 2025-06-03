@@ -119,3 +119,4 @@ We can decode these message types so far, please pay attention to the version of
 |54|NR5G ML1 Searcher Measurement Database Update Ext|0xB97F|131081|
 |55|NR5G RRC OTA Packet|0xB821|16.6.0|
 |56|NR5G MAC RACH Attempt|0xB88A|196616|
+|57|NR5G RLC UL Status PDU|0xB896|196608|
