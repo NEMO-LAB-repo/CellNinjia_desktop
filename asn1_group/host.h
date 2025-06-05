@@ -70,6 +70,8 @@ void decode_B97F(uint8_t *hex_data, size_t length, int *index);
 void decode_B821(uint8_t *hex_data, size_t length, int *index);
 void decode_B88A(uint8_t *hex_data, size_t length, int *index);
 void decode_B896(uint8_t *hex_data, size_t length, int *index);
+void decode_B800(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
+void decode_B80A(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
 
 #ifdef __cplusplus
 }
