@@ -107,7 +107,7 @@ We can decode these message types so far, please pay attention to the version of
 |42|NR5G L2 UL TB|0xB872|4|
 |43|NR5G L2 UL BSR|0xB873|196611|
 |44|NR5G MAC UL TB Stats|0xB881|196609|
-|45|NR5G MAC DCI Info|0xB885|5 & 196617|
+|45|NR5G MAC DCI Info|0xB885|131077 & 196617|
 |46|NR5G MAC DL TB Report|0xB886|3|
 |47|NR5G MAC PDSCH Status|0xB887|5|
 |48|NR5G MAC PDSCH Stats|0xB888|196608|
