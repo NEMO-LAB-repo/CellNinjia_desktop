@@ -491,13 +491,14 @@ void decode()
                 uint16_t logcode_now = (uint16_t) msg_header[1];
                 int msg_len = msg_header[0];
                 uint64_t time_real = msg_header[2];
+                int version_4B = msg_header[3];
                 int second = (int)(time_real/PER_SECOND);
                 int usecond = (int)((time_real/PER_USECOND)-(second*1.0e6));
                 uint64_t time_in_us_total = (uint64_t)second * 1000000 + (uint64_t)usecond;
                 
                 // FILE* orig_stdout = stdout;
                 // stdout = fopen("decode_result.txt", "a");
-                int a = S_D_V_decode((uint8_t *)frame_c, 65535, logcode_now, &start_index, time_in_us_total, 1, 1, 1, msg_len);
+                int a = S_D_V_decode((uint8_t *)frame_c, 65535, logcode_now, &start_index, time_in_us_total, 1, 1, 1, msg_len, version_4B);
                 // fclose(stdout);
                 // stdout = orig_stdout;
 

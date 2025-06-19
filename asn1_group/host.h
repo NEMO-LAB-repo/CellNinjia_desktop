@@ -10,7 +10,7 @@ extern "C" {
 
 
 
-int S_D_V_decode(uint8_t *hex_data, size_t file_size, uint16_t logcode, int *index_in, uint64_t time_in_us_total, int crc_check, int check_format, int pkt_type, int msg_len);
+int S_D_V_decode(uint8_t *hex_data, size_t file_size, uint16_t logcode, int *index_in, uint64_t time_in_us_total, int crc_check, int check_format, int pkt_type, int msg_len, int version_4B);
 long get_file_size(const char *filename);
 
 void decode_B083(uint8_t *hex_data, size_t length, int *index);
@@ -72,6 +72,7 @@ void decode_B88A(uint8_t *hex_data, size_t length, int *index);
 void decode_B896(uint8_t *hex_data, size_t length, int *index);
 void decode_B800(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
 void decode_B80A(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
+void decode_B885_v196617(uint8_t *hex_data, size_t length, int *index);
 
 #ifdef __cplusplus
 }
