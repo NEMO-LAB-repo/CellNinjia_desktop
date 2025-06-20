@@ -73,6 +73,8 @@ void decode_B896(uint8_t *hex_data, size_t length, int *index);
 void decode_B800(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
 void decode_B80A(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
 void decode_B885_v196617(uint8_t *hex_data, size_t length, int *index);
+void decode_B869_v196609(uint8_t *hex_data, size_t length, int *index);
+void decode_B96F_v131075(uint8_t *hex_data, size_t length, int *index);
 
 #ifdef __cplusplus
 }

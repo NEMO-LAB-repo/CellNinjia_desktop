@@ -103,8 +103,8 @@ int main(int argc, char *argv[])
 
         std::cout << "Success open " << port << std::endl;
 
-        int logcode_num = 1;
-        uint16_t logcode_list[1] = {0xB083};
+        int logcode_num = 3;
+        uint16_t logcode_list[3] = {0xB800, 0xB80A, 0xB821};
 
         // generate and send cfg
         bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), logcode_list, logcode_num);
