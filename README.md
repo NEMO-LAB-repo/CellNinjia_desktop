@@ -122,3 +122,5 @@ We can decode these message types so far, please pay attention to the version of
 |57|NR5G RLC UL Status PDU|0xB896|196608|
 |58|NR5G ML1 Searcher Conn Eval|0xB96F|131075|
 |59|NR5G RLC UL Status PDU|0xB869|196609|
+|60|NR5G ML1 Antenna Switch Diversity|0xB98F|131074|
+|61|NR5G LL1 FW Serving FTL|0xB8DD|7|

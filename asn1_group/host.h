@@ -75,6 +75,8 @@ void decode_B80A(uint8_t *hex_data, size_t length, int *index, int msg_len, uint
 void decode_B885_v196617(uint8_t *hex_data, size_t length, int *index);
 void decode_B869_v196609(uint8_t *hex_data, size_t length, int *index);
 void decode_B96F_v131075(uint8_t *hex_data, size_t length, int *index);
+void decode_B98F_v131074(uint8_t *hex_data, size_t length, int *index);
+void decode_B8DD_v7(uint8_t *hex_data, size_t length, int *index);
 
 #ifdef __cplusplus
 }
