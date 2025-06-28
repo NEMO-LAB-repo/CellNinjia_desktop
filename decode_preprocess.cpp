@@ -14,18 +14,6 @@ typedef unsigned char      UINT8;
 
 static std::string current_buffer;
 
-int get_item_id(int type_id) 
-{
-    constexpr int ITEM_ID_MASK = 0x00000FFF;
-    return type_id & ITEM_ID_MASK;
-}
-
-int get_equip_id(int type_id) 
-{
-    constexpr int EQUIP_ID_MASK = 0x0000F000;
-    return (type_id & EQUIP_ID_MASK) >> 12;
-}
-
 static UINT16 calc_crc (UINT8 *data, size_t len, UINT16 crc)
 {
     static const UINT16 table[256] = {
@@ -106,22 +94,6 @@ std::string encode_hdlc_frame (const char *payld, int length)
 bool send_msg_to_serial(int serial_fd, const char* msg, int length) 
 {
     std::string Config = encode_hdlc_frame(msg, length);
-
-    /*Debug log cfg*/
-    // FILE* log_file = fopen("sent_cfg.log", "a+");
-    // if (log_file) {
-    //     fprintf(log_file, "--- Frame (size: %zu bytes) ---\n", frame.size());
-    //     fprintf(log_file, "HEX: ");
-    //     for (size_t i = 0; i < frame.size(); ++i) {
-    //         fprintf(log_file, "%02X ", (unsigned char)frame[i]);
-            
-    //         if ((i + 1) % 16 == 0 && i < frame.size() - 1) {
-    //             fprintf(log_file, "\n     ");
-    //         }
-    //     }
-    //     fprintf(log_file, "\n\n");
-    //     fclose(log_file);
-    // }
     ssize_t bytes_written = write(serial_fd, Config.c_str(), Config.size());
 
     if (bytes_written < 0) {
@@ -133,14 +105,8 @@ bool send_msg_to_serial(int serial_fd, const char* msg, int length)
 }
 
 // Only need to setmask in config for USB mode
-bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
+bool generate_diag_config(int serial_fd, const char* msgtype_list[], int logcode_num)
 {
-    // output file
-    // std::ofstream cfg_file("cfg_generate.txt", std::ios::out);
-    // if (!cfg_file.is_open()) {
-    //     std::cerr << "Failed to open cfg_generate.txt for writing" << std::endl;
-    //     return false;
-    // }
 
     /*Disable part*/ 
     int buf_disable_size = sizeof(char) * 4 + sizeof(int);
@@ -155,71 +121,13 @@ bool generate_diag_config(int serial_fd, uint16_t* logcode, int logcode_num)
     std::cout << "Sent disable config\n" << std::endl;
 
     //set_mask
-    int equip_id = -1;
-    int highest = 0;
+    char* cfg = generate_cfg(msgtype_list, logcode_num);
+    int buf_size = 528;
     
-    for(int i = 0; i < logcode_num; i++)
-    {
-        int id = logcode[i];
-        int e = get_equip_id(id);
-        if (equip_id == -1) 
-        {
-            equip_id = e;
-            highest = (highest > get_item_id(id)) ? highest : get_item_id(id);
-        } 
-        else if (equip_id == e) 
-        {
-            highest = (highest > get_item_id(id)) ? highest : get_item_id(id);
-        } 
-        else 
-        {
-            equip_id = -1;
-            break;
-        }
-    }
-    switch (equip_id) 
-    {
-        case 0x00000001:    // CDMA, _1xEV, ......
-            highest = 0x00000FD3;
-            break;
-        case 0x00000004:    // WCDMA, ......
-            highest = 0x00000920;
-            break;
-        case 0x00000007:    // UMTS, ......
-            highest = 0x00000B56;
-            break;
-        case 0x0000000b:    // LTE, 5G ......
-            highest = 0x00000FFF;
-            break;
-        default:
-            break;
-    }
-    int mask_len = (highest / 8) + 1;
-    int buf_size = sizeof(char) * 4 + sizeof(int) * 3 + mask_len;
-    
-    char* buf = new char[buf_size];
-    buf[0] = 115; // 0x73
-    buf[1] = 0;
-    buf[2] = 0;
-    buf[3] = 0;
-    *((int *)(buf + 4)) = 3;
-    *((int *)(buf + 8)) = equip_id;
-    *((int *)(buf + 12)) = highest + 1;
-    char* mask = buf + 16;
-    std::memset(mask, 0, mask_len);
-    
-    for (int i = 0; i < logcode_num; i++) 
-    {
-        int id = logcode[i] & 0x0FFF;
-        mask[id / 8] |= 1 << (id % 8);
-    }
-
-    // cfg_file.close();
-    
-    bool send_flag = send_msg_to_serial(serial_fd, buf, buf_size);
+    bool send_flag = send_msg_to_serial(serial_fd, cfg, buf_size);
     std::cout << "Sent Set_mask config\n" << std::endl;
-    
-    delete[] buf;
+
+    delete[] cfg;
     delete[] buf_disable;
 
     return send_flag;
@@ -229,27 +137,6 @@ void enter_binary(std::vector<uint8_t>& data)
 {
     // append new log file to global string current_buffer
     current_buffer.append(reinterpret_cast<const char*>(data.data()), data.size());
-    
-    // output the binary as for now
-    // std::ofstream outfile("current_buffer.txt", std::ios::app);
-    // if (outfile.is_open()) 
-    // {
-    //     for (size_t i = 0; i < current_buffer.size(); ++i) {
-    //         outfile << std::hex << std::uppercase << std::setw(2) 
-    //                 << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(current_buffer[i])) << " ";
-            
-    //         if ((i + 1) % 64 == 0) {
-    //             outfile << std::endl;
-    //         }
-    //     }
-        
-    //     if (current_buffer.size() % 64 != 0) {
-    //         outfile << std::endl;
-    //     }
-        
-    //     outfile.close();
-    //     std::cout << "Write (" << current_buffer.size() << " bytes to current_buffer.txt)" << std::endl;
-    // }
 }
 
 static void unescape (std::string& frame) 
@@ -279,46 +166,12 @@ bool get_next_frame(std::string& output_frame, bool& crc_correct)
     output_frame = current_buffer.substr(0, delim);
     current_buffer.erase(0, delim + 1);
     unescape(output_frame);
-    
-    // output the frame
-    // std::ofstream outfile("frame_output.txt", std::ios::app);
-    // if (outfile.is_open()) {
-    //     outfile << "--- New Frame ---" << std::endl;
-    //     outfile << "Raw frame size: " << output_frame.size() << " bytes" << std::endl;
-    
-    //     for (size_t i = 0; i < output_frame.size(); ++i) {
-    //         outfile << std::hex << std::uppercase << std::setw(2) 
-    //                 << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(output_frame[i])) << " ";
-            
-    //         if ((i + 1) % 30 == 0) {
-    //             outfile << std::endl;
-    //         }
-    //     }
-        
-    //     if (output_frame.size() % 30 != 0) {
-    //         outfile << std::endl;
-    //     }
-    // }
-    
-    // if (output_frame.size() <= 2) {
-    //     crc_correct = false;
 
-    //     if (outfile.is_open()) {
-    //         outfile << "CRC FALSE - Frame too short" << std::endl;
-    //         outfile << "----------------------------------------" << std::endl;
-    //         outfile.close();
-    //     }
-        
-    //     return true;
-    // }
     
     // data crc
     UINT16 b1 = output_frame[output_frame.size() - 1] & 0xFF;
     UINT16 b2 = output_frame[output_frame.size() - 2] & 0xFF;
     UINT16 frame_crc16 = (b1 << 8) + b2;
-    
-    // keep the original crc
-    // UINT16 original_crc16 = frame_crc16;
     
     //compute crc
     output_frame.erase(output_frame.size() - 2);
@@ -405,47 +258,7 @@ std::string compute_timestamp(uint64_t timestamp)
     
     return result.str();
 }
-
-
-//decode each msg header msg_len, logcode, timestamp and version
-void decode_header(const char *output_frame, int start_index, uint64_t *msg_header)
-{
-    int log_msg_len_start_index = start_index;
-    uint16_t msglen_1 = (uint16_t)(output_frame[log_msg_len_start_index] & 0xFF);
-    uint16_t msglen_2 = (uint16_t)(output_frame[log_msg_len_start_index+1] & 0xFF);
-    uint16_t msg_len = (msglen_2<<8)+msglen_1;
-
-    int logcode_start_index = start_index+2;
-    uint16_t logcode_1 = (uint16_t)(output_frame[logcode_start_index] & 0xFF);
-    uint16_t logcode_2 = (uint16_t)(output_frame[logcode_start_index+1] & 0xFF);
-    uint16_t logcode = (logcode_2<<8)+logcode_1;
-
-    if(msg_len==0)
-    {
-        logcode=0;
-    }
-
-    int timestamp_start_index = start_index+4;
-    uint64_t t_1 = (uint64_t)(output_frame[timestamp_start_index] & 0xFF);
-    uint64_t t_2 = (uint64_t)(output_frame[timestamp_start_index+1] & 0xFF);
-    uint64_t t_3 = (uint64_t)(output_frame[timestamp_start_index+2] & 0xFF);
-    uint64_t t_4 = (uint64_t)(output_frame[timestamp_start_index+3] & 0xFF);
-    uint64_t t_5 = (uint64_t)(output_frame[timestamp_start_index+4] & 0xFF);
-    uint64_t t_6 = (uint64_t)(output_frame[timestamp_start_index+5] & 0xFF);
-    uint64_t t_7 = (uint64_t)(output_frame[timestamp_start_index+6] & 0xFF);
-    uint64_t t_8 = (uint64_t)(output_frame[timestamp_start_index+7] & 0xFF);
-
-    uint64_t timestamp = ((t_8<<56)|(t_7<<48)|(t_6<<40)|(t_5<<32)|(t_4<<24)|(t_3<<16)|(t_2<<8)|t_1);
-
-    // This version may not be true
-    int version_start_index = start_index+12;
-    int version = ((output_frame[version_start_index+3] & 0xFF)<<24) | ((output_frame[version_start_index+2] & 0xFF)<<16) | ((output_frame[version_start_index+1] & 0xFF)<<8) | ((output_frame[version_start_index] & 0xFF));
-
-    msg_header[0]=msg_len;
-    msg_header[1]=logcode;
-    msg_header[2]=timestamp;
-    msg_header[3]=version;
-}               
+       
 
 
 void decode()
@@ -473,14 +286,15 @@ void decode()
                 int start_index=4;
                 uint64_t msg_header[4];
                 decode_header(frame_c, start_index, msg_header);
+
                 std::string timestamp_str = compute_timestamp(msg_header[2]);
                 start_index+=12;
                 
-                std::cout << "This Msg is " << std::hex << std::uppercase << std::setw(2) 
-                << std::setfill('0') << static_cast<int>(msg_header[1]) 
-                << ": Msg_len = " << std::dec << static_cast<int>(msg_header[0]) 
-                << ", logcode = " << std::hex << std::uppercase << std::setw(2) 
-                << std::setfill('0') << static_cast<int>(msg_header[1]) 
+                const char* msg_type = map_index_msgtype(msg_header[1]);
+                
+                std::cout << "This Msg is "
+                << (msg_type ? msg_type : "Unknown")
+                << ", Msg_len = " << std::dec << static_cast<int>(msg_header[0])
                 << ", version_4B = " << std::dec << static_cast<int>(msg_header[3]) 
                 << ", timestamp = " << timestamp_str
                 << std::endl;
@@ -488,7 +302,6 @@ void decode()
                 std::cout << "----------------------------------" << std::endl;
 
                 //decode_libarary
-                uint16_t logcode_now = (uint16_t) msg_header[1];
                 int msg_len = msg_header[0];
                 uint64_t time_real = msg_header[2];
                 int version_4B = msg_header[3];
@@ -498,7 +311,7 @@ void decode()
                 
                 // FILE* orig_stdout = stdout;
                 // stdout = fopen("decode_result.txt", "a");
-                int a = S_D_V_decode((uint8_t *)frame_c, 65535, logcode_now, &start_index, time_in_us_total, 1, 1, 1, msg_len, version_4B);
+                int a = S_D_V_decode((uint8_t *)frame_c, 65535, msg_header[1], &start_index, time_in_us_total, 1, 1, 1, msg_len, version_4B);
                 // fclose(stdout);
                 // stdout = orig_stdout;
 

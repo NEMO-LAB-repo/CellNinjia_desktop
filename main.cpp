@@ -103,11 +103,16 @@ int main(int argc, char *argv[])
 
         std::cout << "Success open " << port << std::endl;
 
-        int logcode_num = 3;
-        uint16_t logcode_list[3] = {0xB800, 0xB80A, 0xB821};
-
+        // Set up the diag msg name you want
+        int msgtype_num = 3;
+        const char* msgtype_list[3] = {
+            "NR5G L2 UL TB",
+            "NR5G L2 UL BSR",
+            "NR5G L2 UL BSR"
+        };
+        
         // generate and send cfg
-        bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), logcode_list, logcode_num);
+        bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), msgtype_list, msgtype_num);
 
         // Set up file output based on mode
         std::ofstream binary_output_file;
