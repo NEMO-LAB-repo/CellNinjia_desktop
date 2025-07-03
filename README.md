@@ -90,7 +90,7 @@ We can decode these message types so far, please pay attention to the version of
 |25|NR5G MAC PDSCH Stats|196608|
 |26|NR5G MAC RACH Trigger|196615|
 |27|NR5G MAC CDRX Events Info|131073|
-|28|NR5G MAC UCI Information|2|
+|28|NR5G MAC UCI Information|2 & 196608|
 |29|NR5G MAC Flow Control|131073|
 |30|NR5G MAC CSF Report|131073|
 |31|NR5G ML1 Searcher Measurement Database Update Ext|131081|
