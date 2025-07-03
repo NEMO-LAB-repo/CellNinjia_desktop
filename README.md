@@ -38,7 +38,7 @@ Typically the serial port would be listed, typically as /dev/ttyUSBX (X=0,1,2,â€
 We have tested Samsung Galaxy S22 Ultra on UBUNTU 20.04 in both 5G and LTE scenarios.
 
 ## Configure the Message Type
-We can configure the message type you want in main.cpp. You just need to modify the `msgtype_num` and the `msgtype_list` in main.cpp according to the types of message you need. You can find messages information in the following `5G Supported Message Type` part. We currently close the LTE msg types for testing.
+Message types can be configured in main.cpp by modifying the `msgtype_num` parameter and the `msgtype_list` array to specify the required message types. The `msgtype_list` array should contain the message names as defined in the '5G Supported Message Type' section below. Note that LTE message types are currently disabled for testing purposes.
 
 ## Run Offline
 We collect raw binary data transferred by port and record in specific file.
