@@ -84,6 +84,8 @@ void decode_NR5G_ML1_Searcher_Conn_Eval_v131075(uint8_t *hex_data, size_t length
 void decode_NR5G_RLC_UL_Status_PDU_v196609(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_ML1_Antenna_Switch_Diversity_v131074(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_LL1_FW_Serving_FTL_v7(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_ML1_Search_HO_Acq_Confirm_v131079(uint8_t *hex_data, size_t length, int *index);
+
 
 // waiting
 void decode_NAS_800_v1(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);

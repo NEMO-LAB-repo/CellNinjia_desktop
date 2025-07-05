@@ -101,3 +101,4 @@ We can decode these message types so far, please pay attention to the version of
 |36|NR5G RLC UL Status PDU|196609|
 |37|NR5G ML1 Antenna Switch Diversity|131074|
 |38|NR5G LL1 FW Serving FTL|7|
+|39|NR5G ML1 Search HO Acq Confirm|131079|
