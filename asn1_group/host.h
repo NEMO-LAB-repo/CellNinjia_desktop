@@ -85,6 +85,8 @@ void decode_NR5G_RLC_UL_Status_PDU_v196609(uint8_t *hex_data, size_t length, int
 void decode_NR5G_ML1_Antenna_Switch_Diversity_v131074(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_LL1_FW_Serving_FTL_v7(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_ML1_Search_HO_Acq_Confirm_v131079(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_L2_UL_Data_PDU_v196611(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_LL1_FW_RX_Control_AGC_v131072(uint8_t *hex_data, size_t length, int *index);
 
 
 // waiting
