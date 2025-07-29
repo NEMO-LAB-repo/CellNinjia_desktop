@@ -104,3 +104,4 @@ We can decode these message types so far, please pay attention to the version of
 |39|NR5G ML1 Search HO Acq Confirm|131079|
 |40|NR5G L2 UL Data PDU|196611|
 |41|NR5G LL1 FW RX Control AGC|131072|
+|42|NR5G MAC UL Physical Channel Schedule Report|196623|
