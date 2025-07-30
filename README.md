@@ -85,6 +85,7 @@ CellNinjia_desktop/
 ├── include/asn1/     # 📄 Header files
 ├── tools/decoder/    # 🔧 Decoder tool
 ├── lib/              # 📚 Libraries
+├── examples/         # 📃 Offline test files
 └── build/            # 🔨 Build output (created during build)
 ```
 
