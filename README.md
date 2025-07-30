@@ -389,6 +389,4 @@ Open an issue or submit a pull request.
 
 ---
 
-**Made with ❤️ by the Cellular Network Research Community**
-
 </div>
