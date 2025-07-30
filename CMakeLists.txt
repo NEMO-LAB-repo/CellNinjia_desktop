@@ -10,18 +10,18 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Include directories
-include_directories(. asn1_group)
+include_directories(src include/asn1)
 
 # Find and link libserial
 find_library(SERIAL_LIB serial PATHS /usr/lib/x86_64-linux-gnu REQUIRED)
 
 # Add local libcellninjia_asn1.so library
-set(ASN1_LIB ${CMAKE_CURRENT_SOURCE_DIR}/libcellninjia_asn1.so)
+set(ASN1_LIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/libcellninjia_asn1.so)
 
 # Source files for original project
 set(SOURCES
-    main.cpp
-    decode_preprocess.cpp
+    src/main.cpp
+    src/decode_preprocess.cpp
 )
 
 # Create original executable
@@ -37,13 +37,13 @@ target_link_libraries(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH_USE_LINK_PATH TRUE
-    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}"
+    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib"
 )
 
 # Decoder source files
 set(DECODER_SOURCES
-    Decoder/decode.cpp
-    decode_preprocess.cpp
+    tools/decoder/decode.cpp
+    src/decode_preprocess.cpp
 )
 
 # Create Decoder executable
@@ -59,5 +59,5 @@ target_link_libraries(decoder
 set_target_properties(decoder PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH_USE_LINK_PATH TRUE
-    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}"
+    INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib"
 )

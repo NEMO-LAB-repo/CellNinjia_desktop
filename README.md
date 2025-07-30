@@ -78,6 +78,17 @@ sudo apt-get install usbutils
 
 ## 🚀 Building
 
+### 📁 Project Structure
+```
+CellNinjia_desktop/
+├── src/              # 📝 Source code
+├── include/asn1/     # 📄 Header files
+├── tools/decoder/    # 🔧 Decoder tool
+├── lib/              # 📚 Libraries
+└── build/            # 🔨 Build output (created during build)
+```
+
+### 🔨 Build Commands
 ```bash
 # 📁 Create build directory
 mkdir build && cd build
@@ -87,19 +98,24 @@ cmake ..
 
 # 🔨 Build the project
 make
+
+# 🚀 Return to project root to run executables
+cd ..
 ```
 
 <div align="center">
 
 ### 🎉 Build Output
 
-| Executable | Purpose | Icon |
-|------------|---------|------|
-| `CellNinjia_desktop` | Main data collection tool | 🥷 |
-| `decoder` | Offline message decoder | 🔓 |
-| `libcellninjia_asn1.so` | ASN.1 decoding library | 📚 |
+| File | Location | Purpose | Icon |
+|------|----------|---------|------|
+| `CellNinjia_desktop` | Project root | Main data collection tool | 🥷 |
+| `decoder` | Project root | Offline message decoder | 🔓 |
+| `lib/libcellninjia_asn1.so` | lib/ directory | ASN.1 decoding library | 📚 |
 
 </div>
+
+> 💡 **Note**: Executables are built in the project root directory for easy access. The organized source structure improves maintainability while keeping usage simple.
 
 ## 📱 Device Setup
 
@@ -206,12 +222,12 @@ Ideal for detailed post-analysis
 
 ### 🎛️ Customize Your Monitoring
 
-Edit `main.cpp` to select which message types to capture
+Edit `src/main.cpp` to select which message types to capture
 
 </div>
 
 ```cpp
-// 🔧 Set up the diagnostic messages you want (main.cpp:107-112)
+// 🔧 Set up the diagnostic messages you want (src/main.cpp:107-112)
 int msgtype_num = 3;
 const char* msgtype_list[3] = {
     "NR5G L2 UL TB",           // 📤 Uplink Transport Block
