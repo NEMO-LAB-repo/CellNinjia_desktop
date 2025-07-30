@@ -309,7 +309,7 @@ const char* msgtype_list[3] = {
 | 16 | NR5G PDCP UL Control Pdu | 196609 |
 | 17 | NR5G RLC UL Stats | 4 |
 | 18 | NR5G L2 UL Config | 5 |
-| 19 | NR5G L2 UL TB | 4 |
+| 19 | NR5G L2 UL TB | 4 & 196616 |
 | 20 | NR5G L2 UL BSR | 196611 |
 | 21 | NR5G MAC UL TB Stats | 196609 |
 | 22 | NR5G MAC DCI Info | 131077 & 196617 |

@@ -63,6 +63,7 @@ void decode_NR5G_PDCP_UL_Control_Pdu_v196609(uint8_t *hex_data, size_t length, i
 void decode_NR5G_RLC_UL_Stats_v4(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_Config_v5(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_TB_v4(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_L2_UL_TB_v196616(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_BSR_v196611(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_UL_TB_Stats_v196609(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_DCI_Info_v196617(uint8_t *hex_data, size_t length, int *index);
