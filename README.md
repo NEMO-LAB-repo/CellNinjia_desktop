@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/License-Research-orange.svg)](LICENSE)
 [![5G](https://img.shields.io/badge/5G-SA%20%7C%20NSA-red.svg)](https://www.3gpp.org/)
 
-*A powerful RAN monitoring tool for cellular network research*
+*A comprehensive next-generation network monitoring tool for cellular research*
 
 [📖 Documentation](#-overview) • [🚀 Quick Start](#-building) • [📱 Device Setup](#-device-setup) • [🔧 Usage](#-usage) • [🐛 Troubleshooting](#-troubleshooting)
 
@@ -17,7 +17,7 @@
 
 ## 🎯 What is CellNinjia?
 
-CellNinjia is a cutting-edge **RAN (Radio Access Network) monitoring tool** that captures and decodes 5G/LTE diagnostic messages directly from mobile device modems. This desktop component interfaces with mobile phones via USB serial communication to collect real-time cellular network operational data for research and analysis.
+CellNinjia is a cutting-edge **next-generation network monitoring tool** that captures and decodes 5G/LTE diagnostic messages directly from mobile device modems. This comprehensive solution monitors both the **Radio Access Network (RAN)** and **mobile core network communications**, decoding messages exchanged between User Equipment (UE) and network infrastructure. The desktop component interfaces with mobile phones via USB serial communication to collect real-time cellular network operational data for research and analysis.
 
 ## ✨ Key Features
 
@@ -27,12 +27,13 @@ CellNinjia is a cutting-edge **RAN (Radio Access Network) monitoring tool** that
 
 ### 📡 **Real-time Monitoring**
 - Live diagnostic message capture from mobile modems
-- Zero-latency RAN state visibility
+- RAN and core network state visibility
 - Direct USB serial communication
 
 ### 🔍 **Comprehensive Decoding**
 - **42+** different 5G message types supported
 - Multi-layer protocol analysis (NAS, RRC, PDCP, RLC, MAC)
+- UE-to-core network message decoding
 - ASN.1 message parsing
 
 </td>
@@ -235,7 +236,7 @@ const char* msgtype_list[3] = {
 <tr>
 <td width="50%">
 
-### 🌐 **Upper Layers**
+### 🌐 **Upper Layers** (UE ↔ Core Network)
 - **📱 NAS (Non-Access Stratum)**
   - MM5G State, SM5G Plain OTA
   - NSSAI Info, Message Container
@@ -243,7 +244,7 @@ const char* msgtype_list[3] = {
   - MIB Info, Serving Cell Info
   - Configuration Info, CA Combos
 
-### 🔗 **Data Link Layers**
+### 🔗 **Data Link Layers** (RAN)
 - **📦 PDCP (Packet Data Convergence)**
   - DL/UL Data PDU, Stats, Control PDU
 - **🔄 RLC (Radio Link Control)**
@@ -252,7 +253,7 @@ const char* msgtype_list[3] = {
 </td>
 <td width="50%">
 
-### ⚡ **MAC & Physical**
+### ⚡ **MAC & Physical** (RAN)
 - **🎛️ MAC (Medium Access Control)**
   - DCI Info, TB Stats, RACH Trigger
   - UCI Information, Flow Control
