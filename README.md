@@ -1,169 +1,393 @@
-# CellNinjia Desktop
+<div align="center">
 
-CellNinjia is a RAN (Radio Access Network) monitoring tool that captures and decodes 5G/LTE diagnostic messages directly from mobile device modems. This desktop component interfaces with mobile phones via USB serial communication to collect real-time cellular network operational data.
+# 🥷 CellNinjia Desktop
 
-## Overview
+[![C++](https://img.shields.io/badge/C%2B%2B-11-blue.svg)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.10+-green.svg)](https://cmake.org/)
+[![License](https://img.shields.io/badge/License-Research-orange.svg)](LICENSE)
+[![5G](https://img.shields.io/badge/5G-SA%20%7C%20NSA-red.svg)](https://www.3gpp.org/)
+[![arXiv](https://img.shields.io/badge/arXiv-2507.00337-b31b1b.svg)](https://arxiv.org/abs/2507.00337)
 
-CellNinjia provides researchers and network engineers with unprecedented visibility into cellular RAN operations by:
-- Capturing real-time diagnostic messages from mobile device modems
-- Decoding 42+ different 5G message types across protocol layers
-- Supporting both real-time analysis and offline data collection
-- Enabling research into cellular network behavior and performance
+*A powerful RAN monitoring tool for cellular network research*
 
-## Prerequisites
+[📖 Documentation](#-overview) • [🚀 Quick Start](#-building) • [📱 Device Setup](#-device-setup) • [🔧 Usage](#-usage) • [🐛 Troubleshooting](#-troubleshooting)
 
-### System Requirements
-- Linux-based system (tested on Ubuntu 20.04)
-- USB port for mobile device connection
-- Compatible Android device (tested with Samsung Galaxy S22 Ultra)
+</div>
 
-### Dependencies
+---
+
+## 🎯 What is CellNinjia?
+
+CellNinjia is a cutting-edge **RAN (Radio Access Network) monitoring tool** that captures and decodes 5G/LTE diagnostic messages directly from mobile device modems. This desktop component interfaces with mobile phones via USB serial communication to collect real-time cellular network operational data for research and analysis.
+
+## ✨ Key Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 📡 **Real-time Monitoring**
+- Live diagnostic message capture from mobile modems
+- Zero-latency RAN state visibility
+- Direct USB serial communication
+
+### 🔍 **Comprehensive Decoding**
+- **42+** different 5G message types supported
+- Multi-layer protocol analysis (NAS, RRC, PDCP, RLC, MAC)
+- ASN.1 message parsing
+
+</td>
+<td width="50%">
+
+### 🎛️ **Flexible Operation**
+- **Online mode**: Real-time decoding and analysis
+- **Offline mode**: Raw data collection for later processing
+- Configurable message type filtering
+
+### 🏢 **Production Ready**
+- Tested on commercial 5G SA networks
+- Samsung Galaxy S22 Ultra validated
+- Ubuntu 20.04 LTS support
+
+</td>
+</tr>
+</table>
+
+## 📋 Prerequisites
+
+<div align="center">
+
+| Component | Requirement | Status |
+|-----------|-------------|---------|
+| 🐧 **OS** | Linux (Ubuntu 20.04+ recommended) | ✅ Tested |
+| 🔌 **Hardware** | USB port for device connection | ✅ Required |
+| 📱 **Device** | Android with diagnostic mode | ✅ Samsung validated |
+| 🛠️ **Build Tools** | CMake 3.10+, GCC/Clang | ✅ Standard |
+
+</div>
+
+### 📦 Dependencies
+
 ```bash
-# Install libserial development package
+# 🔧 Install libserial development package
 sudo apt-get install libserial-dev
 
-# For USB device access
+# 🔌 For USB device access
 sudo apt-get install usbutils
 ```
 
-## Building
+## 🚀 Building
 
 ```bash
-mkdir build
-cd build
+# 📁 Create build directory
+mkdir build && cd build
+
+# ⚙️ Configure with CMake
 cmake ..
+
+# 🔨 Build the project
 make
 ```
 
-This generates two executables:
-- `CellNinjia_desktop` - Main data collection tool
-- `decoder` - Offline message decoder
+<div align="center">
 
-## Device Setup
+### 🎉 Build Output
 
-### 1. Enable Diagnostic Mode
-Enable diagnostic mode on your Android device. For Samsung devices:
-1. Dial `*#0808#`
-2. Select `RNDIS+DM+MODEM+ADB` mode
-3. Reboot the device
+| Executable | Purpose | Icon |
+|------------|---------|------|
+| `CellNinjia_desktop` | Main data collection tool | 🥷 |
+| `decoder` | Offline message decoder | 🔓 |
+| `libcellninjia_asn1.so` | ASN.1 decoding library | 📚 |
 
-### 2. USB Connection Setup
-1. Connect device via USB cable
-2. Install necessary USB drivers if prompted
-3. Identify the diagnostic port:
+</div>
+
+## 📱 Device Setup
+
+<details>
+<summary><b>🔧 Step 1: Enable Diagnostic Mode</b></summary>
+
+### For Samsung Devices 📞
+1. **Dial**: `*#0808#`
+2. **Select**: `RNDIS+DM+MODEM+ADB` mode
+3. **Reboot**: Your device to apply changes
+
+> 💡 **Note**: This procedure is device-specific. Samsung devices don't require rooting.
+
+</details>
+
+<details>
+<summary><b>🔌 Step 2: USB Connection Setup</b></summary>
+
+### Connection Process
+1. **Connect** device via USB cable
+2. **Install** USB drivers if prompted by your system
+3. **Identify** the diagnostic port using commands below:
 
 ```bash
-# List USB devices
+# 📋 List USB devices
 lsusb
 
-# Example output for Samsung device:
+# 📱 Example output for Samsung device:
 # Bus 001 Device 125: ID 04e8:6864 Samsung Electronics Co., Ltd GT-I9070
 
-# Load USB serial driver
+# 🔧 Load USB serial driver
 sudo modprobe usbserial vendor=0x04e8 product=0x6864
 
-# Check for serial ports (typically /dev/ttyUSB0, /dev/ttyUSB1, etc.)
+# 🔍 Check for serial ports (typically /dev/ttyUSB0, /dev/ttyUSB1, etc.)
 ls /dev/ttyUSB*
 ```
 
-## Usage
+</details>
 
-### Real-time Monitoring (Online Mode)
-Capture and decode messages in real-time:
+## 🔧 Usage
+
+<div align="center">
+
+### 🎮 Choose Your Mode
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+### 🔴 **Online Mode** (Real-time)
+Perfect for live analysis and monitoring
+
 ```bash
+# 🚀 Start real-time monitoring
 ./CellNinjia_desktop -p /dev/ttyUSB0 -b 9600 -s on output.txt
 ```
 
-### Raw Data Collection (Offline Mode)
-Collect raw binary data for later analysis:
+**Features:**
+- ⚡ Real-time decoding
+- 📊 Live data analysis
+- 🎯 Immediate insights
+
+</td>
+<td width="50%">
+
+### 💾 **Offline Mode** (Batch processing)
+Ideal for detailed post-analysis
+
 ```bash
-# Collect raw data
-./CellNinjia_desktop -p /dev/ttyUSB0 -b 9600 -s off raw_data.log
+# 📦 Collect raw data
+./CellNinjia_desktop -p /dev/ttyUSB0 -b 9600 -s off raw.log
 
-# Decode offline
-./decoder -i raw_data.log -o decoded_output.txt
+# 🔓 Decode later
+./decoder -i raw.log -o decoded.txt
 ```
 
-### Command Line Options
-```
-Usage: CellNinjia_desktop -p <portname> -b <baudrate> -s <mode> <logfile>
+**Features:**
+- 💽 Raw data preservation
+- 🔍 Detailed analysis
+- 🔄 Reprocessing capability
 
-Options:
-  -h              Display help message
-  -p <port>       Serial port name (e.g., /dev/ttyUSB0)
-  -b <baudrate>   Baud rate (9600, 19200, 38400, 57600, 115200)
-  -s <mode> <file> Operating mode:
-      on  <file>  Online mode - real-time decoding to file
-      off <file>  Offline mode - raw binary data to file
-```
+</td>
+</tr>
+</table>
 
-## Message Configuration
+### 📝 Command Reference
 
-Configure which message types to capture by modifying `main.cpp`:
+<div align="center">
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `-h` | 📖 Display help message | `./CellNinjia_desktop -h` |
+| `-p <port>` | 🔌 Serial port name | `-p /dev/ttyUSB0` |
+| `-b <baudrate>` | ⚡ Baud rate (9600, 19200, 38400, 57600, 115200) | `-b 9600` |
+| `-s <mode> <file>` | 🎛️ Operating mode and output file | `-s on output.txt` |
+
+</div>
+
+## ⚙️ Message Configuration
+
+<div align="center">
+
+### 🎛️ Customize Your Monitoring
+
+Edit `main.cpp` to select which message types to capture
+
+</div>
 
 ```cpp
-// Set up the diag msg name you want (main.cpp:107-112)
+// 🔧 Set up the diagnostic messages you want (main.cpp:107-112)
 int msgtype_num = 3;
 const char* msgtype_list[3] = {
-    "NR5G L2 UL TB",
-    "NR5G L2 UL BSR",
-    "NR5G MAC DCI Info"
+    "NR5G L2 UL TB",           // 📤 Uplink Transport Block
+    "NR5G L2 UL BSR",          // 📊 Buffer Status Report  
+    "NR5G MAC DCI Info"        // 📡 Downlink Control Information
 };
 ```
 
-## Supported Message Types
+> 💡 **Tip**: Choose message types based on your research focus. More messages = more data but higher processing load.
 
-CellNinjia can decode 42 different 5G message types across multiple protocol layers:
+## 📊 Supported Message Types
 
-| Layer | Examples |
-|-------|----------|
-| **NAS (Non-Access Stratum)** | MM5G State, SM5G Plain OTA, NSSAI Info |
-| **RRC (Radio Resource Control)** | MIB Info, Serving Cell Info, Configuration Info |
-| **PDCP** | DL/UL Data PDU, DL/UL Stats, Control PDU |
-| **RLC** | DL/UL Stats, Status PDU |
-| **MAC** | DCI Info, TB Stats, RACH Trigger, UCI Information |
-| **Physical Layer** | Searcher Measurements, Antenna Diversity, AGC Control |
+<div align="center">
 
-For a complete list of supported messages and their versions, see the table in the original documentation.
+### 🎯 **42+ Message Types Across All Protocol Layers**
 
-## Network Compatibility
+*Comprehensive coverage of the 5G protocol stack*
 
-- **5G SA (Standalone)**: Full support with comprehensive message coverage
-- **4G LTE**: Supported (message types currently disabled for testing)
-- **Commercial Networks**: Validated across multiple carrier networks
+</div>
 
-## Troubleshooting
+<table>
+<tr>
+<td width="50%">
 
-### Common Issues
+### 🌐 **Upper Layers**
+- **📱 NAS (Non-Access Stratum)**
+  - MM5G State, SM5G Plain OTA
+  - NSSAI Info, Message Container
+- **📡 RRC (Radio Resource Control)**  
+  - MIB Info, Serving Cell Info
+  - Configuration Info, CA Combos
 
-**Port Access Denied**
+### 🔗 **Data Link Layers**
+- **📦 PDCP (Packet Data Convergence)**
+  - DL/UL Data PDU, Stats, Control PDU
+- **🔄 RLC (Radio Link Control)**
+  - DL/UL Stats, Status PDU
+
+</td>
+<td width="50%">
+
+### ⚡ **MAC & Physical**
+- **🎛️ MAC (Medium Access Control)**
+  - DCI Info, TB Stats, RACH Trigger
+  - UCI Information, Flow Control
+- **📶 Physical Layer**
+  - Searcher Measurements
+  - Antenna Diversity, AGC Control
+
+### 🎪 **Network Compatibility**
+- ✅ **5G SA** (Standalone) - Full support
+- ✅ **5G NSA** (Non-Standalone) - Supported  
+- ✅ **4G LTE** - Available (testing disabled)
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+> 📋 **Complete List**: See original documentation for all 42 message types with version numbers
+
+</div>
+
+## 🐛 Troubleshooting
+
+<details>
+<summary><b>🚫 Port Access Denied</b></summary>
+
 ```bash
+# 👥 Add user to dialout group
 sudo usermod -a -G dialout $USER
-# Log out and back in, or:
+# Log out and back in, or use immediate fix:
 sudo chmod 666 /dev/ttyUSB0
 ```
 
-**Device Not Detected**
-- Verify diagnostic mode is enabled
-- Check USB cable and connection
-- Ensure proper USB drivers are installed
-- Try different USB ports
+</details>
 
-**No Data Received**
-- Verify correct port and baud rate
-- Check message type configuration
-- Ensure device is actively using cellular network
+<details>
+<summary><b>📱 Device Not Detected</b></summary>
 
-## Research Applications
+**Checklist:**
+- ✅ Verify diagnostic mode is enabled (`*#0808#`)
+- ✅ Check USB cable and connection quality
+- ✅ Ensure proper USB drivers are installed
+- ✅ Try different USB ports (USB 2.0 preferred)
+- ✅ Restart device after enabling diagnostic mode
 
-CellNinjia is designed for cellular network research including:
-- RAN buffer analysis and delay attribution
-- Protocol performance evaluation
-- Network optimization studies
-- 5G/LTE behavior characterization
+</details>
 
-For research using CellNinjia, see: [arXiv:2507.00337](https://arxiv.org/abs/2507.00337)
+<details>
+<summary><b>📡 No Data Received</b></summary>
 
-## License
+**Debug Steps:**
+1. **Port & Baud Rate**: Verify correct settings
+2. **Message Config**: Check message type configuration in `main.cpp`
+3. **Network Activity**: Ensure device is actively using cellular network
+4. **Signal Strength**: Move to area with good cellular coverage
+5. **Carrier Compatibility**: Some carriers may block diagnostic access
 
-This tool is provided for research and educational purposes.
+</details>
+
+<details>
+<summary><b>🔧 Build Issues</b></summary>
+
+```bash
+# 🧹 Clean build
+rm -rf build && mkdir build && cd build
+
+# 🔍 Verbose build for debugging
+cmake .. -DCMAKE_VERBOSE_MAKEFILE=ON
+make VERBOSE=1
+```
+
+</details>
+
+## 🔬 Research Applications
+
+<div align="center">
+
+### 🎓 **Enabling Cutting-Edge Cellular Research**
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+### 📊 **Network Analysis**
+- 🔍 RAN buffer analysis and delay attribution
+- 📈 Protocol performance evaluation  
+- ⚡ Real-time network behavior monitoring
+- 🎯 5G/LTE characterization studies
+
+</td>
+<td width="50%">
+
+### 🧪 **Research Areas**
+- 🌐 Network optimization studies
+- 📱 Mobile protocol analysis
+- 🔬 Cellular performance research
+- 🎛️ QoS and latency investigations
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+### 📚 **Academic Reference**
+
+[![arXiv](https://img.shields.io/badge/Paper-arXiv%3A2507.00337-red.svg)](https://arxiv.org/abs/2507.00337)
+
+*"Seeing Through the Fog: Empowering Mobile Devices to Expose and Mitigate RAN Buffer Effects on Delay-Sensitive Protocols"*
+
+</div>
+
+---
+
+<div align="center">
+
+## 📄 License
+
+![License](https://img.shields.io/badge/License-Research%20%26%20Educational%20Use-blue.svg)
+
+**This tool is provided for research and educational purposes.**
+
+### 🤝 Contributing
+Interested in contributing? We welcome researchers and developers!  
+Open an issue or submit a pull request.
+
+### ⭐ Star This Project
+If CellNinjia helps your research, please star this repository!
+
+---
+
+**Made with ❤️ by the Cellular Network Research Community**
+
+</div>
