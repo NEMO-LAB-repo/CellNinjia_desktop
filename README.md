@@ -6,7 +6,6 @@
 [![CMake](https://img.shields.io/badge/CMake-3.10+-green.svg)](https://cmake.org/)
 [![License](https://img.shields.io/badge/License-Research-orange.svg)](LICENSE)
 [![5G](https://img.shields.io/badge/5G-SA%20%7C%20NSA-red.svg)](https://www.3gpp.org/)
-[![arXiv](https://img.shields.io/badge/arXiv-2507.00337-b31b1b.svg)](https://arxiv.org/abs/2507.00337)
 
 *A powerful RAN monitoring tool for cellular network research*
 
@@ -270,11 +269,57 @@ const char* msgtype_list[3] = {
 </tr>
 </table>
 
-<div align="center">
+<details>
+<summary><b>📋 Complete List of All 42 Supported Message Types</b></summary>
 
-> 📋 **Complete List**: See original documentation for all 42 message types with version numbers
+| Index | Message Name | Version |
+|-------|--------------|---------|
+| 1 | NR5G NAS SM5G Plain OTA Outgoing Msg | 1 |
+| 2 | NR5G NAS MM5G State | 1 |
+| 3 | NR5G NAS Plain Message Container | 1 |
+| 4 | NR5G NAS MM5G NSSAI Info | 1 |
+| 5 | NR5G RRC MIB Info | 1 |
+| 6 | NR5G RRC Serving Cell Info | 4 |
+| 7 | NR5G RRC Configuration Info | 8 |
+| 8 | NR5G RRC Supported CA Combos | 7 |
+| 9 | NR5G PDCP DL Data Pdu | 6 |
+| 10 | NR5G PDCP DL Rbs Stats | 5 |
+| 11 | NR5G L2 DL Config | 5 |
+| 12 | NR5G RLC DL Stats | 196608 |
+| 13 | NR5G RLC DL Status PDU | 1 |
+| 14 | NR5G L2 DL DATA PDU | 6 |
+| 15 | NR5G PDCP UL Stats | 9 |
+| 16 | NR5G PDCP UL Control Pdu | 196609 |
+| 17 | NR5G RLC UL Stats | 4 |
+| 18 | NR5G L2 UL Config | 5 |
+| 19 | NR5G L2 UL TB | 4 |
+| 20 | NR5G L2 UL BSR | 196611 |
+| 21 | NR5G MAC UL TB Stats | 196609 |
+| 22 | NR5G MAC DCI Info | 131077 & 196617 |
+| 23 | NR5G MAC DL TB Report | 3 |
+| 24 | NR5G MAC PDSCH Status | 5 |
+| 25 | NR5G MAC PDSCH Stats | 196608 |
+| 26 | NR5G MAC RACH Trigger | 196615 |
+| 27 | NR5G MAC CDRX Events Info | 131073 |
+| 28 | NR5G MAC UCI Information | 2 & 196608 |
+| 29 | NR5G MAC Flow Control | 131073 |
+| 30 | NR5G MAC CSF Report | 131073 |
+| 31 | NR5G ML1 Searcher Measurement Database Update Ext | 131081 |
+| 32 | NR5G RRC OTA Packet | 16.6.0 |
+| 33 | NR5G MAC RACH Attempt | 196616 |
+| 34 | NR5G RLC UL Status PDU | 196608 |
+| 35 | NR5G ML1 Searcher Conn Eval | 131075 |
+| 36 | NR5G RLC UL Status PDU | 196609 |
+| 37 | NR5G ML1 Antenna Switch Diversity | 131074 |
+| 38 | NR5G LL1 FW Serving FTL | 7 |
+| 39 | NR5G ML1 Search HO Acq Confirm | 131079 |
+| 40 | NR5G L2 UL Data PDU | 196611 |
+| 41 | NR5G LL1 FW RX Control AGC | 131072 |
+| 42 | NR5G MAC UL Physical Channel Schedule Report | 196623 |
 
-</div>
+> ⚠️ **Version Notice**: Pay attention to the version of the data you collect. If versions don't match, it may lead to program errors or incorrect decoding.
+
+</details>
 
 ## 🐛 Troubleshooting
 
@@ -328,47 +373,6 @@ make VERBOSE=1
 
 </details>
 
-## 🔬 Research Applications
-
-<div align="center">
-
-### 🎓 **Enabling Cutting-Edge Cellular Research**
-
-</div>
-
-<table>
-<tr>
-<td width="50%">
-
-### 📊 **Network Analysis**
-- 🔍 RAN buffer analysis and delay attribution
-- 📈 Protocol performance evaluation  
-- ⚡ Real-time network behavior monitoring
-- 🎯 5G/LTE characterization studies
-
-</td>
-<td width="50%">
-
-### 🧪 **Research Areas**
-- 🌐 Network optimization studies
-- 📱 Mobile protocol analysis
-- 🔬 Cellular performance research
-- 🎛️ QoS and latency investigations
-
-</td>
-</tr>
-</table>
-
-<div align="center">
-
-### 📚 **Academic Reference**
-
-[![arXiv](https://img.shields.io/badge/Paper-arXiv%3A2507.00337-red.svg)](https://arxiv.org/abs/2507.00337)
-
-*"Seeing Through the Fog: Empowering Mobile Devices to Expose and Mitigate RAN Buffer Effects on Delay-Sensitive Protocols"*
-
-</div>
-
 ---
 
 <div align="center">
@@ -382,9 +386,6 @@ make VERBOSE=1
 ### 🤝 Contributing
 Interested in contributing? We welcome researchers and developers!  
 Open an issue or submit a pull request.
-
-### ⭐ Star This Project
-If CellNinjia helps your research, please star this repository!
 
 ---
 
