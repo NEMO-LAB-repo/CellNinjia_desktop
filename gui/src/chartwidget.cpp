@@ -36,7 +36,7 @@ ChartWidget::~ChartWidget() = default;
 
 void ChartWidget::setupChart()
 {
-    m_chart->setTheme(QChart::ChartThemeBlueNms);
+    m_chart->setTheme(QChart::ChartThemeBlueCerulean);
     m_chart->setAnimationOptions(QChart::SeriesAnimations);
     m_chartView->setRenderHint(QPainter::Antialiasing);
     
@@ -292,7 +292,13 @@ void ChartWidget::updateMessageTypesChart()
     }
     
     m_barSeries->clear();
-    m_categoriesAxis->clear();
+    // QCategoryAxis doesn't have clear(), recreate it
+    m_chart->removeAxis(m_categoriesAxis);
+    delete m_categoriesAxis;
+    m_categoriesAxis = new QCategoryAxis();
+    m_categoriesAxis->setTitleText("Message Types");
+    m_chart->addAxis(m_categoriesAxis, Qt::AlignBottom);
+    m_barSeries->attachAxis(m_categoriesAxis);
     
     auto *barSet = new QBarSet("Messages");
     barSet->setColor(QColor(33, 150, 243));
@@ -323,7 +329,13 @@ void ChartWidget::updateLayerDistributionChart()
     }
     
     m_barSeries->clear();
-    m_categoriesAxis->clear();
+    // QCategoryAxis doesn't have clear(), recreate it
+    m_chart->removeAxis(m_categoriesAxis);
+    delete m_categoriesAxis;
+    m_categoriesAxis = new QCategoryAxis();
+    m_categoriesAxis->setTitleText("Protocol Layers");
+    m_chart->addAxis(m_categoriesAxis, Qt::AlignBottom);
+    m_barSeries->attachAxis(m_categoriesAxis);
     
     auto *barSet = new QBarSet("Layer Messages");
     

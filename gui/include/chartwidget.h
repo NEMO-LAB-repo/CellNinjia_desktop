@@ -53,6 +53,8 @@ private:
     void setupSignalStrengthChart();
     void setupLayerDistributionChart();
     void updateTimeRange();
+    void updateMessageTypesChart();
+    void updateLayerDistributionChart();
 
     ChartType m_chartType;
     QChart *m_chart;

@@ -21,17 +21,20 @@
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
+#include <QtCore/QDateTime>
 #include <memory>
 
 QT_BEGIN_NAMESPACE
-class QAction;
-class QMenu;
-class QMenuBar;
 QT_END_NAMESPACE
 
 class CellNinjiaCore;
+class OfflineDecoderDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -52,6 +55,7 @@ private slots:
     void updateConnectionStatus();
     void displayReceivedData(const QString &data);
     void updateStatistics();
+    void openOfflineDecoder();
 
 private:
     void setupUI();

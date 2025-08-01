@@ -1,9 +1,11 @@
 #include "../include/mainwindow.h"
+#include "../include/offlinedecoderdialog.h"
 #include "cellninjia_core.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
+#include <QtCore/QRandomGenerator>
 #include <QtSerialPort/QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     , m_centralWidget(nullptr)
     , m_tabWidget(nullptr)
     , m_isConnected(false)
-    , m_isMonitoring(false)
     , m_updateTimer(new QTimer(this))
+    , m_isMonitoring(false)
 {
     setupUI();
     setupMenuBar();
@@ -302,6 +304,7 @@ void MainWindow::setupMenuBar()
     auto *decoderAction = toolsMenu->addAction("&Offline Decoder...");
     auto *aboutAction = toolsMenu->addAction("&About CellNinjia");
     
+    connect(decoderAction, &QAction::triggered, this, &MainWindow::openOfflineDecoder);
     connect(aboutAction, &QAction::triggered, [this]() {
         QMessageBox::about(this, "About CellNinjia", 
             "CellNinjia Desktop v1.0\n\n"
@@ -477,7 +480,7 @@ void MainWindow::updateStatistics()
     static int messageCount = 0;
     static qint64 startTime = QDateTime::currentMSecsSinceEpoch();
     
-    messageCount += qrand() % 10;
+    messageCount += QRandomGenerator::global()->bounded(10);
     qint64 elapsed = QDateTime::currentMSecsSinceEpoch() - startTime;
     
     m_messagesReceived->setText(QString::number(messageCount));
@@ -500,4 +503,11 @@ void MainWindow::updateButtonStates()
     m_disconnectButton->setEnabled(m_isConnected);
     m_startButton->setEnabled(m_isConnected && !m_isMonitoring);
     m_stopButton->setEnabled(m_isMonitoring);
+}
+
+void MainWindow::openOfflineDecoder()
+{
+    auto *dialog = new OfflineDecoderDialog(this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }

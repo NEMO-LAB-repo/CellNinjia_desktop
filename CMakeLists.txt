@@ -12,6 +12,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 # Find Qt5 components
 find_package(Qt5 REQUIRED COMPONENTS Core Widgets SerialPort Charts)
 
+# Enable automatic MOC, UIC and RCC generation
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 # Include directories
 include_directories(src include/asn1 gui/include)
 
@@ -54,12 +59,20 @@ set(GUI_SOURCES
     gui/src/mainwindow.cpp
     gui/src/cellninjia_core.cpp
     gui/src/chartwidget.cpp
+    gui/src/offlinedecoderdialog.cpp
     # Additional advanced features will be implemented as needed
     src/decode_preprocess.cpp  # Shared decode functionality
 )
 
+set(GUI_HEADERS
+    gui/include/mainwindow.h
+    gui/include/cellninjia_core.h
+    gui/include/chartwidget.h
+    gui/include/offlinedecoderdialog.h
+)
+
 # Create Qt GUI executable
-add_executable(CellNinjia_GUI ${GUI_SOURCES})
+add_executable(CellNinjia_GUI ${GUI_SOURCES} ${GUI_HEADERS})
 
 # Link Qt libraries to GUI executable
 target_link_libraries(CellNinjia_GUI
