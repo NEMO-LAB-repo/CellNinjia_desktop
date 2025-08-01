@@ -28,6 +28,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
 #include <QtCore/QDateTime>
+#include <QtCore/QProcess>
 #include <memory>
 
 QT_BEGIN_NAMESPACE
@@ -66,6 +67,8 @@ private:
     void setupStatusPanel();
     void loadMessageTypes();
     void updateButtonStates();
+    void generateMessageTypeCode();
+    QStringList getSelectedMessageTypes();
 
     // UI Components
     QWidget *m_centralWidget;
@@ -100,10 +103,11 @@ private:
     // Menu and Status
     QMenuBar *m_menuBar;
     QStatusBar *m_statusBar;
-    QTimer *m_updateTimer;
     
     // Backend integration
     std::unique_ptr<CellNinjiaCore> m_core;
+    std::unique_ptr<QProcess> m_monitoringProcess;
+    QTimer *m_updateTimer;
     bool m_isConnected;
     bool m_isMonitoring;
     QString m_currentOutputFile;

@@ -6,14 +6,19 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 #include <QtCore/QRandomGenerator>
+#include <QtCore/QDebug>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QRegularExpression>
 #include <QtSerialPort/QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_centralWidget(nullptr)
     , m_tabWidget(nullptr)
-    , m_isConnected(false)
+    , m_monitoringProcess(std::make_unique<QProcess>(this))
     , m_updateTimer(new QTimer(this))
+    , m_isConnected(false)
     , m_isMonitoring(false)
 {
     setupUI();
@@ -166,6 +171,7 @@ void MainWindow::setupMessageConfigPanel()
     
     m_messageTypeList = new QListWidget(this);
     m_messageTypeList->setSelectionMode(QAbstractItemView::MultiSelection);
+    connect(m_messageTypeList, &QListWidget::itemSelectionChanged, this, &MainWindow::onMessageTypeChanged);
     messageLayout->addWidget(m_messageTypeList);
     
     // Quick selection buttons
@@ -178,10 +184,12 @@ void MainWindow::setupMessageConfigPanel()
         for (int i = 0; i < m_messageTypeList->count(); ++i) {
             m_messageTypeList->item(i)->setSelected(true);
         }
+        onMessageTypeChanged();
     });
     
     connect(selectNoneBtn, &QPushButton::clicked, [this]() {
         m_messageTypeList->clearSelection();
+        onMessageTypeChanged();
     });
     
     connect(selectDefaultBtn, &QPushButton::clicked, [this]() {
@@ -194,6 +202,7 @@ void MainWindow::setupMessageConfigPanel()
                 item->setSelected(true);
             }
         }
+        onMessageTypeChanged();
     });
     
     quickSelectLayout->addWidget(selectAllBtn);
@@ -409,15 +418,92 @@ void MainWindow::startMonitoring()
         return;
     }
     
+    QStringList selectedTypes = getSelectedMessageTypes();
+    if (selectedTypes.isEmpty()) {
+        QMessageBox::warning(this, "Warning", "Please select at least one message type to monitor.");
+        return;
+    }
+    
+    // Build command arguments according to requirements
+    QString program = "./CellNinjia_desktop";
+    QStringList arguments;
+    
+    // Add port parameter  
+    QString portValue = m_portCombo->currentData().toString().isEmpty() ? 
+                        m_portCombo->currentText() : m_portCombo->currentData().toString();
+    // Ensure port has /dev/ prefix if it's missing
+    if (!portValue.startsWith("/dev/") && portValue.contains("ttyUSB")) {
+        portValue = "/dev/" + portValue;
+    }
+    arguments << "-p" << portValue;
+    
+    // Add baud rate parameter  
+    arguments << "-b" << m_baudCombo->currentText();
+    
+    // Add mode and output file parameters
+    QString mode = m_modeCombo->currentData().toString() == "online" ? "on" : "off";
+    arguments << "-s" << mode << m_outputFileEdit->text();
+    
+    // Connect process signals
+    connect(m_monitoringProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            [this](int exitCode, QProcess::ExitStatus exitStatus) {
+                m_isMonitoring = false;
+                updateButtonStates();
+                m_updateTimer->stop();
+                if (exitStatus == QProcess::CrashExit) {
+                    m_statusBar->showMessage("Monitoring process crashed");
+                    QMessageBox::warning(this, "Error", "Monitoring process crashed unexpectedly.");
+                } else {
+                    m_statusBar->showMessage("Monitoring stopped");
+                }
+            });
+    
+    connect(m_monitoringProcess.get(), &QProcess::readyReadStandardOutput, [this]() {
+        QByteArray data = m_monitoringProcess->readAllStandardOutput();
+        displayReceivedData(QString::fromUtf8(data));
+    });
+    
+    connect(m_monitoringProcess.get(), &QProcess::readyReadStandardError, [this]() {
+        QByteArray data = m_monitoringProcess->readAllStandardError();
+        QString message = QString::fromUtf8(data);
+        // Only prefix with ERROR if it looks like an actual error message
+        if (message.toLower().contains("error") || message.toLower().contains("failed") || 
+            message.toLower().contains("cannot") || message.toLower().contains("unable")) {
+            displayReceivedData("ERROR: " + message);
+        } else {
+            displayReceivedData(message);
+        }
+    });
+    
+    // Start the monitoring process
+    m_monitoringProcess->start(program, arguments);
+    
+    if (!m_monitoringProcess->waitForStarted(5000)) {
+        QMessageBox::critical(this, "Error", 
+            QString("Failed to start monitoring process: %1").arg(m_monitoringProcess->errorString()));
+        return;
+    }
+    
     m_isMonitoring = true;
     updateButtonStates();
     m_updateTimer->start();
     m_tabWidget->setCurrentIndex(2); // Switch to monitoring tab
-    m_statusBar->showMessage("Monitoring started - " + m_modeCombo->currentText());
+    
+    // Show command being executed
+    QString commandStr = program + " " + arguments.join(" ");
+    m_statusBar->showMessage("Monitoring started: " + commandStr);
+    displayReceivedData("Command: " + commandStr + "\n");
 }
 
 void MainWindow::stopMonitoring()
 {
+    if (m_monitoringProcess && m_monitoringProcess->state() == QProcess::Running) {
+        m_monitoringProcess->terminate();
+        if (!m_monitoringProcess->waitForFinished(3000)) {
+            m_monitoringProcess->kill();
+        }
+    }
+    
     m_isMonitoring = false;
     updateButtonStates();
     m_updateTimer->stop();
@@ -452,7 +538,9 @@ void MainWindow::onModeChanged()
 
 void MainWindow::onMessageTypeChanged()
 {
-    // Handle message type selection changes
+    QStringList selectedTypes = getSelectedMessageTypes();
+    qDebug() << "Message types changed. Selected count:" << selectedTypes.size();
+    generateMessageTypeCode();
 }
 
 void MainWindow::updateConnectionStatus()
@@ -510,4 +598,51 @@ void MainWindow::openOfflineDecoder()
     auto *dialog = new OfflineDecoderDialog(this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->show();
+}
+
+QStringList MainWindow::getSelectedMessageTypes()
+{
+    QStringList selectedTypes;
+    for (int i = 0; i < m_messageTypeList->count(); ++i) {
+        if (m_messageTypeList->item(i)->isSelected()) {
+            selectedTypes.append(m_messageTypeList->item(i)->text());
+        }
+    }
+    return selectedTypes;
+}
+
+void MainWindow::generateMessageTypeCode()
+{
+    QStringList selectedTypes = getSelectedMessageTypes();
+    int msgtype_num = selectedTypes.size();
+    
+    qDebug() << "Generating config for" << msgtype_num << "message types";
+    
+    if (msgtype_num == 0) {
+        m_statusBar->showMessage("No message types selected");
+        return;
+    }
+    
+    // Generate configuration file instead of modifying source code
+    QString configPath = "msgtype_config.txt";
+    QFile configFile(configPath);
+    
+    if (configFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&configFile);
+        out << "# CellNinjia Message Type Configuration\n";
+        out << "# Generated by CellNinjia GUI on " << QDateTime::currentDateTime().toString() << "\n";
+        out << "# One message type per line, empty lines and lines starting with # are ignored\n\n";
+        
+        for (const QString &messageType : selectedTypes) {
+            out << messageType << "\n";
+        }
+        
+        configFile.close();
+        
+        m_statusBar->showMessage(QString("Selected %1 message types - config file updated successfully").arg(msgtype_num));
+        qDebug() << "Successfully updated msgtype_config.txt with new message type configuration";
+    } else {
+        m_statusBar->showMessage("Error: Could not write to config file");
+        qDebug() << "Error: Could not open msgtype_config.txt for writing";
+    }
 }

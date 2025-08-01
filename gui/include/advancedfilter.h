@@ -15,7 +15,10 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QDateTimeEdit>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QInputDialog>
 #include <QtCore/QRegularExpression>
+#include <QtCore/QDateTime>
 
 class AdvancedFilterDialog : public QDialog
 {
@@ -67,6 +70,8 @@ public:
 signals:
     void filterApplied(const FilterCriteria &criteria);
     void previewRequested(const FilterCriteria &criteria);
+    void presetSaved(const QString &name);
+    void presetLoaded(const QString &name);
 
 private slots:
     void onApplyFilter();

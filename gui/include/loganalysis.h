@@ -100,6 +100,7 @@ private slots:
 
 private:
     void setupUI();
+    void setupControlPanel();
     void setupOverviewTab();
     void setupMessageTypesTab();
     void setupTemporalTab();

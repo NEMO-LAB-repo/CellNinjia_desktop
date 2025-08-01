@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <vector>
 #include <libserial/SerialPort.h>
 #include "decode_preprocess.h"
 #include <fstream>
@@ -103,16 +104,38 @@ int main(int argc, char *argv[])
 
         std::cout << "Success open " << port << std::endl;
 
-        // Set up the diag msg name you want
-        int msgtype_num = 3;
-        const char* msgtype_list[3] = {
-            "NR5G L2 UL TB",
-            "NR5G L2 UL BSR",
-            "NR5G L2 UL BSR"
-        };
+        // Load message types from config file
+        std::vector<std::string> msgtype_vector;
+        std::ifstream config_file("msgtype_config.txt");
+        
+        if (config_file.is_open()) {
+            std::string line;
+            while (std::getline(config_file, line)) {
+                if (!line.empty() && line[0] != '#') { // Skip empty lines and comments
+                    msgtype_vector.push_back(line);
+                }
+            }
+            config_file.close();
+        }
+        
+        // Fall back to default if no config file
+        if (msgtype_vector.empty()) {
+            msgtype_vector = {
+                "NR5G L2 UL Config",
+                "NR5G L2 UL TB", 
+                "NR5G L2 UL BSR"
+            };
+        }
+        
+        // Convert to C-style array for generate_diag_config
+        int msgtype_num = msgtype_vector.size();
+        std::vector<const char*> msgtype_list;
+        for (const auto& msg : msgtype_vector) {
+            msgtype_list.push_back(msg.c_str());
+        }
         
         // generate and send cfg
-        bool generate_cfg = generate_diag_config(g_serial_port->GetFileDescriptor(), msgtype_list, msgtype_num);
+        generate_diag_config(g_serial_port->GetFileDescriptor(), msgtype_list.data(), msgtype_num);
 
         // Set up file output based on mode
         std::ofstream binary_output_file;

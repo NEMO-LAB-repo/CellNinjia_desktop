@@ -18,7 +18,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Include directories
-include_directories(src include/asn1 gui/include)
+include_directories(src include/asn1)
+
+# GUI-specific include directories (only for GUI target)
+# gui/include will be added specifically to the GUI target
 
 # Find and link libserial (for CLI version)
 find_library(SERIAL_LIB serial PATHS /usr/lib/x86_64-linux-gnu)
@@ -26,13 +29,17 @@ find_library(SERIAL_LIB serial PATHS /usr/lib/x86_64-linux-gnu)
 # Add local libcellninjia_asn1.so library
 set(ASN1_LIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/libcellninjia_asn1.so)
 
-# Source files for original project
+# ============================================================================
+# CLI APPLICATION (Original command-line version)
+# ============================================================================
+
+# Source files for CLI version
 set(SOURCES
     src/main.cpp
     src/decode_preprocess.cpp
 )
 
-# Create CLI executable (original version)
+# Create CLI executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Link libraries to CLI executable
@@ -53,26 +60,39 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib"
 )
 
-# Qt GUI Application
+# ============================================================================
+# GUI APPLICATION (Qt-based graphical interface)
+# ============================================================================
+
+# GUI source files (all contained in gui/ folder)
 set(GUI_SOURCES
     gui/src/main.cpp
     gui/src/mainwindow.cpp
     gui/src/cellninjia_core.cpp
     gui/src/chartwidget.cpp
     gui/src/offlinedecoderdialog.cpp
-    # Additional advanced features will be implemented as needed
-    src/decode_preprocess.cpp  # Shared decode functionality
+    gui/src/advancedfilter.cpp
+    gui/src/loganalysis.cpp
+    gui/src/loganalysisworker.cpp
+    # Shared decode functionality from src/
+    src/decode_preprocess.cpp
 )
 
+# GUI header files (all contained in gui/include/ folder)
 set(GUI_HEADERS
     gui/include/mainwindow.h
     gui/include/cellninjia_core.h
     gui/include/chartwidget.h
     gui/include/offlinedecoderdialog.h
+    gui/include/advancedfilter.h
+    gui/include/loganalysis.h
 )
 
 # Create Qt GUI executable
 add_executable(CellNinjia_GUI ${GUI_SOURCES} ${GUI_HEADERS})
+
+# Add GUI-specific include directories
+target_include_directories(CellNinjia_GUI PRIVATE gui/include)
 
 # Link Qt libraries to GUI executable
 target_link_libraries(CellNinjia_GUI
@@ -89,6 +109,10 @@ set_target_properties(CellNinjia_GUI PROPERTIES
     INSTALL_RPATH_USE_LINK_PATH TRUE
     INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib"
 )
+
+# ============================================================================
+# DECODER UTILITY (Command-line decoder tool)
+# ============================================================================
 
 # Decoder source files
 set(DECODER_SOURCES
