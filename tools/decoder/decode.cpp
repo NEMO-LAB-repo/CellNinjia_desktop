@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 #include <libserial/SerialPort.h>
-#include "../decode_preprocess.h"
+#include "../../src/decode_preprocess.h"
 #include <fstream>
 #include <vector>
 

@@ -7,7 +7,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include "./asn1_group/host.h"
+#include "../include/asn1/host.h"
 
 bool generate_diag_config(int serial_fd, const char* msgtype_list[], int logcode_num);
 

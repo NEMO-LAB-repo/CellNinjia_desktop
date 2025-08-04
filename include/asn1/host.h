@@ -63,6 +63,7 @@ void decode_NR5G_PDCP_UL_Control_Pdu_v196609(uint8_t *hex_data, size_t length, i
 void decode_NR5G_RLC_UL_Stats_v4(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_Config_v5(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_TB_v4(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_L2_UL_TB_v196616(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_BSR_v196611(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_UL_TB_Stats_v196609(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_DCI_Info_v196617(uint8_t *hex_data, size_t length, int *index);
@@ -87,7 +88,7 @@ void decode_NR5G_LL1_FW_Serving_FTL_v7(uint8_t *hex_data, size_t length, int *in
 void decode_NR5G_ML1_Search_HO_Acq_Confirm_v131079(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_L2_UL_Data_PDU_v196611(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_LL1_FW_RX_Control_AGC_v131072(uint8_t *hex_data, size_t length, int *index);
-
+void decode_NR5G_MAC_UL_Physical_Channel_Schedule_Report_v196623(uint8_t *hex_data, size_t length, int *index);
 
 // waiting
 void decode_NAS_800_v1(uint8_t *hex_data, size_t length, int *index, int msg_len, uint64_t time_in_us_total);
