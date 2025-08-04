@@ -104,11 +104,14 @@ int main(int argc, char *argv[])
         std::cout << "Success open " << port << std::endl;
 
         // Set up the diag msg name you want
-        int msgtype_num = 3;
-        const char* msgtype_list[3] = {
-            "NR5G L2 UL TB",
-            "NR5G L2 UL BSR",
-            "NR5G L2 UL BSR"
+        int msgtype_num = 6;
+        const char* msgtype_list[6] = {
+	    "NR5G MAC DCI Info",
+	    "NR5G MAC CSF Report",
+	    "NR5G MAC UCI Information",
+	    "NR5G L2 UL BSR",
+	    "NR5G MAC RACH Attempt",
+	    "NR5G RRC Supported CA Combos"
         };
         
         // generate and send cfg
