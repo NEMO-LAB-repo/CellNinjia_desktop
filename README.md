@@ -325,7 +325,7 @@ const char* msgtype_list[3] = {
 | 31 | NR5G ML1 Searcher Measurement Database Update Ext | 131081 |
 | 32 | NR5G RRC OTA Packet | 16.6.0 |
 | 33 | NR5G MAC RACH Attempt | 196616 |
-| 34 | NR5G RLC UL Status PDU | 196608 |
+| 34 | NR5G MAC UCI Payload Information | 196608 |
 | 35 | NR5G ML1 Searcher Conn Eval | 131075 |
 | 36 | NR5G RLC UL Status PDU | 196609 |
 | 37 | NR5G ML1 Antenna Switch Diversity | 131074 |

@@ -7,6 +7,48 @@ extern "C" {
 #include <string.h>
 #include <stdint.h>
 #include "Metadata_Header_cb_dcall.h"
+// #include "B16C_cb_dcall.h"
+// #include "B083_cb_dcall.h"
+// // #include "B0A1_cb_dcall.h"
+// // #include "B0B6_cb_dcall.h"
+// #include "B0CD_cb_dcall.h"
+// #include "B116_cb_dcall.h"
+// #include "B12A_cb_dcall.h"
+// #include "B167_cb_dcall.h"
+// #include "B168_cb_dcall.h"
+// #include "B169_cb_dcall.h"
+// #include "B16A_cb_dcall.h"
+// #include "B16D_cb_dcall.h"
+// #include "B17A_cb_dcall.h"
+// #include "B17D_cb_dcall.h"
+// #include "B17F_cb_dcall.h"
+// #include "B18F_cb_dcall.h"
+// #include "B197_cb_dcall.h"
+// #include "B1B2_cb_dcall.h"
+// #include "B181_cb_dcall.h"
+// #include "B184_cb_dcall.h"
+// #include "B196_cb_dcall.h"
+// #include "B144_cb_dcall.h"
+// #include "B173_cb_dcall.h"
+// #include "B064_cb_dcall.h"
+// #include "B16C_v48_cb_dcall.h"
+// #include "B16C_v48_no_asn.h"
+// #include "B173_no_asn.h"
+// #include "B064_no_asn.h"
+// #include "B139_v161_no_asn.h"
+// #include "B887_no_asn.h"
+// #include "B885_no_asn.h"
+// #include "B883_no_asn.h"
+// #include "B872_no_asn.h"
+
+// #include "B814_cb_dcall.h"
+// #include "B815_cb_dcall.h"
+// #include "B822_cb_dcall.h"
+// #include "B823_cb_dcall.h"
+// #include "B825_cb_dcall.h"
+// #include "B826_cb_dcall.h"
+// #include "B840_cb_dcall.h"
+// #include "B842_cb_dcall.h"
 
 
 int S_D_V_decode(uint8_t *hex_data, size_t file_size, int msg_index, int *index_in, uint64_t time_in_us_total, int crc_check, int check_format, int pkt_type, int msg_len, int version_4B);
@@ -75,6 +117,7 @@ void decode_NR5G_MAC_RACH_Trigger_v196615(uint8_t *hex_data, size_t length, int 
 void decode_NR5G_MAC_CDRX_Events_Info_v131073(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_UCI_Information_v2(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_UCI_Information_v196608(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_MAC_UCI_Payload_Information_v196608(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_Flow_Control_v131073(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_CSF_Report_v131073(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_ML1_Searcher_Measurement_Database_Update_Ext_v131073(uint8_t *hex_data, size_t length, int *index);
