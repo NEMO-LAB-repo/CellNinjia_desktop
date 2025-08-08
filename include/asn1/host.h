@@ -120,6 +120,7 @@ void decode_NR5G_MAC_UCI_Information_v196608(uint8_t *hex_data, size_t length, i
 void decode_NR5G_MAC_UCI_Payload_Information_v196608(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_Flow_Control_v131073(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_CSF_Report_v131073(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_MAC_CSF_Report_v196613(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_ML1_Searcher_Measurement_Database_Update_Ext_v131073(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_RRC_OTA_Packet_v1660(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_RACH_Attempt_v196616(uint8_t *hex_data, size_t length, int *index);

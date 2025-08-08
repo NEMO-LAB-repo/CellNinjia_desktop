@@ -321,7 +321,7 @@ const char* msgtype_list[3] = {
 | 27 | NR5G MAC CDRX Events Info | 131073 |
 | 28 | NR5G MAC UCI Information | 2 & 196608 |
 | 29 | NR5G MAC Flow Control | 131073 |
-| 30 | NR5G MAC CSF Report | 131073 |
+| 30 | NR5G MAC CSF Report | 131073 & 196613 |
 | 31 | NR5G ML1 Searcher Measurement Database Update Ext | 131081 |
 | 32 | NR5G RRC OTA Packet | 16.6.0 |
 | 33 | NR5G MAC RACH Attempt | 196616 |
