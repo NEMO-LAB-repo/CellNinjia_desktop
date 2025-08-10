@@ -4,6 +4,7 @@
 #include <libserial/SerialPort.h>
 #include "decode_preprocess.h"
 #include <fstream>
+#include <chrono>
 
 // global serial object define
 std::shared_ptr<LibSerial::SerialPort> g_serial_port;
@@ -104,11 +105,13 @@ int main(int argc, char *argv[])
         std::cout << "Success open " << port << std::endl;
 
         // Set up the diag msg name you want
-        int msgtype_num = 3;
-        const char* msgtype_list[3] = {
-            "NR5G L2 UL TB",
+        int msgtype_num = 5;
+        const char* msgtype_list[5] = {
+            "NR5G MAC DCI Info",
+            "NR5G MAC CSF Report",
+            "NR5G MAC UCI Information",
             "NR5G L2 UL BSR",
-            "NR5G L2 UL BSR"
+            "NR5G MAC RACH Attempt"
         };
         
         // generate and send cfg
@@ -117,6 +120,15 @@ int main(int argc, char *argv[])
         // Set up file output based on mode
         std::ofstream binary_output_file;
         FILE* original_stdout = stdout;
+
+        FILE* ts_file = nullptr;
+        std::string ts_filename = output_filename;
+        ts_filename.insert(0, "ts_");
+        ts_file = fopen(ts_filename.c_str(), "a");
+        if (!ts_file) {
+            std::cerr << "Error: Could not open output file for timestamp: " << ts_filename << std::endl;
+            return 1;
+        }
         
         if (run_mode == RunMode::OFFLINE) {
             // Open binary file for raw data in offline mode
@@ -126,6 +138,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
             std::cout << "Binary raw data will be written to: " << output_filename << std::endl;
+            std::cout << "Timestamp of each message will be written to: " << ts_filename << std::endl;
         } else if (run_mode == RunMode::ONLINE) {
             // Redirect stdout to file for decoded data in online mode
             FILE* output_file = freopen(output_filename.c_str(), "w", stdout);
@@ -134,17 +147,28 @@ int main(int argc, char *argv[])
                 return 1;
             }
             std::cerr << "Decoded output will be written to: " << output_filename << std::endl;
+            std::cerr << "Timestamp of each message will be written to: " << ts_filename << std::endl;
         }
 
         while (true)
         {
             std::vector<uint8_t> buffer;
+            char ts_buff[2048];
 
             // read from serial
             g_serial_port->Read(buffer, 64, 10000000);
 
             if (buffer.size() > 0)
-            {
+            {   
+                // Get the current time point from the system clock
+                std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+                // Convert the time point to milliseconds since the epoch
+                auto microseconds_since_epoch = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+
+                memset(ts_buff, 0, sizeof(ts_buff));
+                snprintf(ts_buff, sizeof(ts_buff),"%ld", microseconds_since_epoch);
+                fprintf(ts_file, "%s\n", ts_buff);
+
                 if (run_mode == RunMode::OFFLINE) {
                     // Write raw data directly to binary file
                     binary_output_file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
@@ -165,6 +189,7 @@ int main(int argc, char *argv[])
         }
         
         // Clean up files
+        fclose(ts_file);
         if (run_mode == RunMode::OFFLINE && binary_output_file.is_open()) {
             binary_output_file.close();
         } else if (run_mode == RunMode::ONLINE) {
