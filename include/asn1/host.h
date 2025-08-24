@@ -112,6 +112,7 @@ void decode_NR5G_MAC_DCI_Info_v196617(uint8_t *hex_data, size_t length, int *ind
 void decode_NR5G_MAC_DCI_Info_v131077(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_DL_TB_Report_v3(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_PDSCH_Status_v5(uint8_t *hex_data, size_t length, int *index);
+void decode_NR5G_MAC_PDSCH_Status_v196611(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_PDSCH_Stats_v196608(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_RACH_Trigger_v196615(uint8_t *hex_data, size_t length, int *index);
 void decode_NR5G_MAC_CDRX_Events_Info_v131073(uint8_t *hex_data, size_t length, int *index);

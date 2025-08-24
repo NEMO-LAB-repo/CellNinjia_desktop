@@ -315,7 +315,7 @@ const char* msgtype_list[3] = {
 | 21 | NR5G MAC UL TB Stats | 196609 |
 | 22 | NR5G MAC DCI Info | 131077 & 196617 |
 | 23 | NR5G MAC DL TB Report | 3 |
-| 24 | NR5G MAC PDSCH Status | 5 |
+| 24 | NR5G MAC PDSCH Status | 5 & 196611|
 | 25 | NR5G MAC PDSCH Stats | 196608 |
 | 26 | NR5G MAC RACH Trigger | 196615 |
 | 27 | NR5G MAC CDRX Events Info | 131073 |
