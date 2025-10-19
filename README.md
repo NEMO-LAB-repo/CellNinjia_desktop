@@ -334,6 +334,7 @@ const char* msgtype_list[3] = {
 | 40 | NR5G L2 UL Data PDU | 196611 |
 | 41 | NR5G LL1 FW RX Control AGC | 131072 |
 | 42 | NR5G MAC UL Physical Channel Schedule Report | 196623 |
+| 43 | LTE RRC OTA Packet | 16.1.0 | 
 
 > ⚠️ **Version Notice**: Pay attention to the version of the data you collect. If versions don't match, it may lead to program errors or incorrect decoding.
 

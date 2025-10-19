@@ -84,6 +84,7 @@ void decode_B196(uint8_t *hex_data, size_t length, int *index);
 void decode_B197(uint8_t *hex_data, size_t length, int *index);
 void decode_B1B2(uint8_t *hex_data, size_t length, int *index);
 void decode_B173(uint8_t *hex_data, size_t length, int *index, uint64_t time_in_us_total, uint16_t logcode);
+void decode_LTE_RRC_OTA_Packet_v16_1_0(uint8_t *hex_data, size_t length, int *index);
 
 //5G
 void decode_NR5G_NAS_SM5G_Plain_OTA_Outgoing_Msg_v1(uint8_t *hex_data, size_t length, int *index);
