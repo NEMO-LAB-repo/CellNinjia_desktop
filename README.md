@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🥷 CellNinjia Desktop
+# CellNinjia Desktop
 
 [![C++](https://img.shields.io/badge/C%2B%2B-11-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.10+-green.svg)](https://cmake.org/)
@@ -334,7 +334,7 @@ const char* msgtype_list[3] = {
 | 40 | NR5G L2 UL Data PDU | 196611 |
 | 41 | NR5G LL1 FW RX Control AGC | 131072 |
 | 42 | NR5G MAC UL Physical Channel Schedule Report | 196623 |
-| 43 | LTE RRC OTA Packet | 16.1.0 | 
+| 43 | NR5G RRC OTA Packet | 16.1.0 | 
 
 > ⚠️ **Version Notice**: Pay attention to the version of the data you collect. If versions don't match, it may lead to program errors or incorrect decoding.
 
@@ -350,6 +350,10 @@ const char* msgtype_list[3] = {
 sudo usermod -a -G dialout $USER
 # Log out and back in, or use immediate fix:
 sudo chmod 666 /dev/ttyUSB0
+# Use adb and CellNinjia together
+sudo rmmod usbserial  
+- Then setup adb applications
+sudo modprobe usbserial vendor=0x04e8 product=0x6864
 ```
 
 </details>
