@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use CellNinjia, please cite the paper listed under preferred-citation."
+title: "CellNinjia Desktop"
+authors:
+  - name: "Next-Generation Mobile Network (NEMO) Lab, University at Buffalo"
+repository-code: "https://github.com/NEMO-LAB-repo/CellNinjia_desktop"
+license: Apache-2.0
+preferred-citation:
+  type: conference-paper
+  title: "RAN-Aware Delay Compensation for Delay-Sensitive Protocols in Cellular Networks"
+  authors:
+    - family-names: Liu
+      given-names: Yuxin
+      orcid: "https://orcid.org/0000-0001-6726-9088"
+      affiliation: "University at Buffalo, SUNY"
+    - family-names: Zhang
+      given-names: Tianyang
+      orcid: "https://orcid.org/0009-0003-2941-5648"
+      affiliation: "University at Buffalo, SUNY"
+    - family-names: Wu
+      given-names: Qiang
+      orcid: "https://orcid.org/0009-0001-0274-608X"
+      affiliation: "University at Buffalo, SUNY"
+    - family-names: Ren
+      given-names: Ju
+      orcid: "https://orcid.org/0000-0003-2782-183X"
+      affiliation: "Tsinghua University"
+    - family-names: Jamieson
+      given-names: Kyle
+      orcid: "https://orcid.org/0000-0002-7940-2867"
+      affiliation: "Princeton University"
+    - family-names: Xie
+      given-names: Yaxiong
+      orcid: "https://orcid.org/0000-0003-4258-6655"
+      affiliation: "University at Buffalo, SUNY"
+  collection-title: "Proceedings of the 2026 ACM/IEEE International Conference on Embedded Artificial Intelligence and Sensing Systems"
+  collection-type: proceedings
+  conference:
+    name: "SenSys '26"
+    city: "Saint-Malo"
+    country: FR
+  publisher:
+    name: "ACM"
+    city: "New York, NY"
+  doi: "10.1145/3774906.3802791"
+  url: "https://doi.org/10.1145/3774906.3802791"
+  year: 2026
+  month: 5
+  start: 1144
+  end: 1157
