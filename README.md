@@ -4,12 +4,12 @@
 
 [![C++](https://img.shields.io/badge/C%2B%2B-11-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.10+-green.svg)](https://cmake.org/)
-[![License](https://img.shields.io/badge/License-Research-orange.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![5G](https://img.shields.io/badge/5G-SA%20%7C%20NSA-red.svg)](https://www.3gpp.org/)
 
 *A comprehensive next-generation network monitoring tool for cellular research*
 
-[📖 Documentation](#-overview) • [🚀 Quick Start](#-building) • [📱 Device Setup](#-device-setup) • [🔧 Usage](#-usage) • [🐛 Troubleshooting](#-troubleshooting)
+[📖 Documentation](#-overview) • [🚀 Quick Start](#-building) • [📱 Device Setup](#-device-setup) • [🔧 Usage](#-usage) • [🐛 Troubleshooting](#-troubleshooting) • [📝 Citation](#-citation)
 
 </div>
 
@@ -18,6 +18,8 @@
 ## 🎯 What is CellNinjia?
 
 CellNinjia is a cutting-edge **next-generation network monitoring tool** that captures and decodes 5G/LTE diagnostic messages directly from mobile device modems. This comprehensive solution monitors both the **Radio Access Network (RAN)** and **mobile core network communications**, decoding messages exchanged between User Equipment (UE) and network infrastructure. The desktop component interfaces with mobile phones via USB serial communication to collect real-time cellular network operational data for research and analysis.
+
+> 📝 **Citation**: If you use CellNinjia, please cite our SenSys '26 paper. See [Citation](#-citation) for the BibTeX entry.
 
 ## ✨ Key Features
 
@@ -401,15 +403,36 @@ make VERBOSE=1
 
 </details>
 
+## 📝 Citation
+
+If you use CellNinjia, please cite the following paper:
+
+> Yuxin Liu, Tianyang Zhang, Qiang Wu, Ju Ren, Kyle Jamieson, and Yaxiong Xie. 2026. **RAN-Aware Delay Compensation for Delay-Sensitive Protocols in Cellular Networks.** In *Proceedings of the 2026 ACM/IEEE International Conference on Embedded Artificial Intelligence and Sensing Systems (SenSys '26)*. ACM, 1144–1157. https://doi.org/10.1145/3774906.3802791
+
+```bibtex
+@inproceedings{liu2026ranaware,
+  author    = {Liu, Yuxin and Zhang, Tianyang and Wu, Qiang and Ren, Ju and Jamieson, Kyle and Xie, Yaxiong},
+  title     = {{RAN}-Aware Delay Compensation for Delay-Sensitive Protocols in Cellular Networks},
+  booktitle = {Proceedings of the 2026 ACM/IEEE International Conference on Embedded Artificial Intelligence and Sensing Systems},
+  series    = {SenSys '26},
+  pages     = {1144--1157},
+  year      = {2026},
+  publisher = {ACM},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3774906.3802791},
+  url       = {https://doi.org/10.1145/3774906.3802791}
+}
+```
+
 ---
 
 <div align="center">
 
 ## 📄 License
 
-![License](https://img.shields.io/badge/License-Research%20%26%20Educational%20Use-blue.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-**This tool is provided for research and educational purposes.**
+**This project is licensed under the [Apache License 2.0](LICENSE).**
 
 ### 🤝 Contributing
 Interested in contributing? We welcome researchers and developers!  
